@@ -1,0 +1,130 @@
+2025-10-28 10:33:45 - __main__ - INFO - ============================================================
+2025-10-28 10:33:45 - __main__ - INFO - Iniciando Plante Uma Flor v2.0 - Servidor de Pedidos
+2025-10-28 10:33:45 - __main__ - INFO - ============================================================
+2025-10-28 10:33:45 - __main__ - INFO - Criando aplicação Flask...
+2025-10-28 10:33:45 - __main__ - INFO - Iniciando sistema de descoberta de rede (UDP Broadcast)...
+2025-10-28 10:33:45 - __main__ - ERROR - Erro fatal ao iniciar servidor: cannot access local variable 'NetworkDiscovery' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\caioc\Downloads\Melhorando Gerador de pedidos V2\PedidosServidorFloricultura\Servidor\main.py", line 53, in main
+    network_discovery = NetworkDiscovery(
+                        ^^^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'NetworkDiscovery' where it is not associated with a value
+2025-10-28 10:38:26 - __main__ - INFO - ============================================================
+2025-10-28 10:38:26 - __main__ - INFO - Iniciando Plante Uma Flor v2.0 - Servidor de Pedidos
+2025-10-28 10:38:26 - __main__ - INFO - ============================================================
+2025-10-28 10:38:26 - __main__ - INFO - Criando aplicação Flask...
+2025-10-28 10:38:27 - __main__ - INFO - Iniciando sistema de descoberta de rede (UDP Broadcast)...
+2025-10-28 10:38:27 - __main__ - ERROR - Erro fatal ao iniciar servidor: cannot access local variable 'NetworkDiscovery' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\caioc\Downloads\Melhorando Gerador de pedidos V2\PedidosServidorFloricultura\Servidor\main.py", line 53, in main
+    network_discovery = NetworkDiscovery(
+                        ^^^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'NetworkDiscovery' where it is not associated with a value
+2025-10-28 10:38:40 - __main__ - INFO - ============================================================
+2025-10-28 10:38:40 - __main__ - INFO - Iniciando Plante Uma Flor v2.0 - Servidor de Pedidos
+2025-10-28 10:38:40 - __main__ - INFO - ============================================================
+2025-10-28 10:38:40 - __main__ - INFO - Criando aplicação Flask...
+2025-10-28 10:38:40 - __main__ - INFO - Iniciando sistema de descoberta de rede (UDP Broadcast)...
+2025-10-28 10:38:40 - __main__ - ERROR - Erro fatal ao iniciar servidor: cannot access local variable 'NetworkDiscovery' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\caioc\Downloads\Melhorando Gerador de pedidos V2\PedidosServidorFloricultura\Servidor\main.py", line 53, in main
+    network_discovery = NetworkDiscovery(
+                        ^^^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'NetworkDiscovery' where it is not associated with a value
+2025-10-28 10:39:01 - __main__ - INFO - ============================================================
+2025-10-28 10:39:01 - __main__ - INFO - Iniciando Plante Uma Flor v2.0 - Servidor de Pedidos
+2025-10-28 10:39:01 - __main__ - INFO - ============================================================
+2025-10-28 10:39:01 - __main__ - INFO - Criando aplicação Flask...
+2025-10-28 10:39:01 - __main__ - INFO - Iniciando sistema de descoberta de rede (UDP Broadcast)...
+2025-10-28 10:39:01 - __main__ - ERROR - Erro fatal ao iniciar servidor: cannot access local variable 'NetworkDiscovery' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\caioc\Downloads\Melhorando Gerador de pedidos V2\PedidosServidorFloricultura\Servidor\main.py", line 53, in main
+    network_discovery = NetworkDiscovery(
+                        ^^^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'NetworkDiscovery' where it is not associated with a value
+2025-10-28 10:39:15 - __main__ - INFO - ============================================================
+2025-10-28 10:39:15 - __main__ - INFO - Iniciando Plante Uma Flor v2.0 - Servidor de Pedidos
+2025-10-28 10:39:15 - __main__ - INFO - ============================================================
+2025-10-28 10:39:15 - __main__ - INFO - Criando aplicação Flask...
+2025-10-28 10:39:15 - __main__ - INFO - Iniciando sistema de descoberta de rede (UDP Broadcast)...
+2025-10-28 10:39:15 - __main__ - ERROR - Erro fatal ao iniciar servidor: cannot access local variable 'NetworkDiscovery' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\caioc\Downloads\Melhorando Gerador de pedidos V2\PedidosServidorFloricultura\Servidor\main.py", line 53, in main
+    network_discovery = NetworkDiscovery(
+                        ^^^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'NetworkDiscovery' where it is not associated with a value
+2025-10-28 10:42:25 - __main__ - INFO - ============================================================
+2025-10-28 10:42:25 - __main__ - INFO - Iniciando Plante Uma Flor v2.0 - Servidor de Pedidos
+2025-10-28 10:42:25 - __main__ - INFO - ============================================================
+2025-10-28 10:42:25 - __main__ - INFO - Criando aplicação Flask...
+2025-10-28 10:42:25 - __main__ - INFO - Iniciando sistema de descoberta de rede (UDP Broadcast)...
+2025-10-28 10:42:25 - app.utils.network_discovery - INFO - NetworkDiscovery iniciado na porta 37020
+2025-10-28 10:42:25 - app.utils.network_discovery - INFO - Socket UDP criado para broadcast
+2025-10-28 10:42:25 - app.utils.network_discovery - INFO - NetworkDiscovery iniciado na porta 37020
+2025-10-28 10:42:25 - app.utils.network_discovery - INFO - Socket UDP criado para broadcast
+2025-10-28 10:42:25 - __main__ - INFO - Broadcast habilitado na porta UDP 37020
+2025-10-28 10:42:25 - __main__ - INFO - Servidor configurado:
+2025-10-28 10:42:25 - __main__ - INFO -   - Host: 0.0.0.0
+2025-10-28 10:42:25 - __main__ - INFO -   - Porta: 5000
+2025-10-28 10:42:25 - __main__ - INFO -   - Debug: False
+2025-10-28 10:42:25 - __main__ - INFO -   - Broadcast: Habilitado
+2025-10-28 10:42:25 - __main__ - INFO - 
+Servidor acessível em:
+2025-10-28 10:42:25 - __main__ - INFO -   - Local: http://localhost:5000
+2025-10-28 10:42:25 - __main__ - INFO -   - Rede: http://192.168.1.148:5000
+2025-10-28 10:42:25 - __main__ - INFO - 
+Clientes PDFgen.py podem se conectar automaticamente!
+2025-10-28 10:42:25 - __main__ - INFO - 
+Servidor Flask iniciando...
+2025-10-28 10:42:25 - __main__ - INFO - Pressione Ctrl+C para parar
+
+2025-10-28 11:15:33 - __main__ - INFO - ============================================================
+2025-10-28 11:15:33 - __main__ - INFO - Iniciando Plante Uma Flor v2.0 - Servidor de Pedidos
+2025-10-28 11:15:33 - __main__ - INFO - ============================================================
+2025-10-28 11:15:33 - __main__ - INFO - Criando aplicação Flask...
+2025-10-28 11:15:33 - __main__ - INFO - Iniciando sistema de descoberta de rede (UDP Broadcast)...
+2025-10-28 11:15:33 - app.utils.network_discovery - INFO - NetworkDiscovery iniciado na porta 37020
+2025-10-28 11:15:33 - app.utils.network_discovery - INFO - Socket UDP criado para broadcast
+2025-10-28 11:15:33 - app.utils.network_discovery - INFO - NetworkDiscovery iniciado na porta 37020
+2025-10-28 11:15:33 - __main__ - INFO - Broadcast habilitado na porta UDP 37020
+2025-10-28 11:15:33 - app.utils.network_discovery - INFO - Socket UDP criado para broadcast
+2025-10-28 11:15:33 - __main__ - INFO - Servidor configurado:
+2025-10-28 11:15:33 - __main__ - INFO -   - Host: 0.0.0.0
+2025-10-28 11:15:33 - __main__ - INFO -   - Porta: 5000
+2025-10-28 11:15:33 - __main__ - INFO -   - Debug: False
+2025-10-28 11:15:33 - __main__ - INFO -   - Broadcast: Habilitado
+2025-10-28 11:15:33 - __main__ - INFO - 
+Servidor acessível em:
+2025-10-28 11:15:33 - __main__ - INFO -   - Local: http://localhost:5000
+2025-10-28 11:15:33 - __main__ - INFO -   - Rede: http://192.168.1.148:5000
+2025-10-28 11:15:33 - __main__ - INFO - 
+Clientes PDFgen.py podem se conectar automaticamente!
+2025-10-28 11:15:33 - __main__ - INFO - 
+Servidor Flask iniciando...
+2025-10-28 11:15:33 - __main__ - INFO - Pressione Ctrl+C para parar
+
+2025-10-28 11:45:17 - __main__ - INFO - ============================================================
+2025-10-28 11:45:17 - __main__ - INFO - Iniciando Plante Uma Flor v2.0 - Servidor de Pedidos
+2025-10-28 11:45:17 - __main__ - INFO - ============================================================
+2025-10-28 11:45:17 - __main__ - INFO - Criando aplicação Flask...
+2025-10-28 11:45:17 - __main__ - INFO - Iniciando sistema de descoberta de rede (UDP Broadcast)...
+2025-10-28 11:45:17 - app.utils.network_discovery - INFO - NetworkDiscovery iniciado na porta 37020
+2025-10-28 11:45:17 - app.utils.network_discovery - INFO - Socket UDP criado para broadcast
+2025-10-28 11:45:17 - app.utils.network_discovery - INFO - NetworkDiscovery iniciado na porta 37020
+2025-10-28 11:45:17 - app.utils.network_discovery - INFO - Socket UDP criado para broadcast
+2025-10-28 11:45:17 - __main__ - INFO - Broadcast habilitado na porta UDP 37020
+2025-10-28 11:45:17 - __main__ - INFO - Servidor configurado:
+2025-10-28 11:45:17 - __main__ - INFO -   - Host: 0.0.0.0
+2025-10-28 11:45:17 - __main__ - INFO -   - Porta: 5000
+2025-10-28 11:45:17 - __main__ - INFO -   - Debug: False
+2025-10-28 11:45:17 - __main__ - INFO -   - Broadcast: Habilitado
+2025-10-28 11:45:17 - __main__ - INFO - 
+Servidor acessível em:
+2025-10-28 11:45:17 - __main__ - INFO -   - Local: http://localhost:5000
+2025-10-28 11:45:17 - __main__ - INFO -   - Rede: http://192.168.1.148:5000
+2025-10-28 11:45:17 - __main__ - INFO - 
+Clientes PDFgen.py podem se conectar automaticamente!
+2025-10-28 11:45:17 - __main__ - INFO - 
+Servidor Flask iniciando...
+2025-10-28 11:45:17 - __main__ - INFO - Pressione Ctrl+C para parar
+

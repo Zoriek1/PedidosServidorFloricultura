@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel - Plante Uma Flor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style_ifood.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>Plante Uma Flor</h1>
+                <h2>Gerenciador de Comandas</h2>
+            </div>
+            <a href="{{ url_for('criar_pedido') }}" class="btn-new">Novo Pedido</a>
+        </header>
+
+        <!-- Mensagens de alerta -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <main>
+            {% if pedidos %}
+                <div class="stats">
+                    <div class="stat-card">
+                        <span class="stat-value">{{ pedidos|length }}</span>
+                        <span class="stat-label">Total de Pedidos</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">{{ pedidos|selectattr('status', 'equalto', 'agendado')|list|length }}</span>
+                        <span class="stat-label">Agendados</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">{{ pedidos|selectattr('status', 'equalto', 'em_producao')|list|length }}</span>
+                        <span class="stat-label">Em Produção</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">{{ pedidos|selectattr('status', 'equalto', 'concluido')|list|length }}</span>
+                        <span class="stat-label">Concluídos</span>
+                    </div>
+                </div>
+
+                <div class="pedidos-grid">
+                    {% for pedido in pedidos %}
+                        <div class="pedido-card status-{{ pedido.status }}">
+                            <div class="pedido-header">
+                                <h3>Pedido #{{ pedido.id }}</h3>
+                                <span class="badge badge-{{ pedido.status }}">{{ pedido.status|title }}</span>
+                            </div>
+                            
+                            <div class="pedido-body">
+                                <div class="info-row">
+                                    <span class="label">Cliente:</span>
+                                    <span class="value">{{ pedido.cliente }}</span>
+                                </div>
+                                
+                                <div class="info-row">
+                                    <span class="label">Produto:</span>
+                                    <span class="value">{{ pedido.produto }}</span>
+                                </div>
+                                
+                                <div class="info-row">
+                                    <span class="label">Quantidade:</span>
+                                    <span class="value">{{ pedido.quantidade }}</span>
+                                </div>
+                                
+                                <div class="info-row">
+                                    <span class="label">Destinatário:</span>
+                                    <span class="value">{{ pedido.destinatario }}</span>
+                                </div>
+                                
+                                <div class="info-row">
+                                    <span class="label">Entrega:</span>
+                                    <span class="value">{{ pedido.dia_entrega.strftime('%d/%m/%Y') }}</span>
+                                </div>
+                                
+                                <div class="info-row">
+                                    <span class="label">Horário:</span>
+                                    <span class="value">{{ pedido.horario }}</span>
+                                </div>
+                                
+                                {% if pedido.mensagem %}
+                                    <div class="info-row mensagem-row">
+                                        <span class="label">Mensagem:</span>
+                                        <span class="value">{{ pedido.mensagem }}</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="pedido-footer">
+                                <form method="POST" action="{{ url_for('atualizar_status', pedido_id=pedido.id) }}" 
+                                      class="status-form" onsubmit="return confirm('Deseja alterar o status?');">
+                                    <select name="status" class="status-select">
+                                        <option value="agendado" {% if pedido.status == 'agendado' %}selected{% endif %}>Agendado</option>
+                                        <option value="em_producao" {% if pedido.status == 'em_producao' %}selected{% endif %}>Em Produção</option>
+                                        <option value="pronto_entrega" {% if pedido.status == 'pronto_entrega' %}selected{% endif %}>Pronto para Entrega</option>
+                                        <option value="em_rota" {% if pedido.status == 'em_rota' %}selected{% endif %}>Em Rota</option>
+                                        <option value="pronto_retirada" {% if pedido.status == 'pronto_retirada' %}selected{% endif %}>Pronto para Retirada</option>
+                                        <option value="concluido" {% if pedido.status == 'concluido' %}selected{% endif %}>Concluído</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary btn-small">Atualizar</button>
+                                </form>
+                                
+                                <form method="POST" action="{{ url_for('deletar_pedido', pedido_id=pedido.id) }}" 
+                                      class="delete-form" onsubmit="return confirm('Tem certeza que deseja deletar este pedido?');">
+                                    <button type="submit" class="btn btn-danger btn-small">🗑️ Deletar</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📋</div>
+                    <h3>Nenhum pedido ainda</h3>
+                    <p>Comece criando seu primeiro pedido!</p>
+                    <a href="{{ url_for('criar_pedido') }}" class="btn btn-primary">
+                        Criar Primeiro Pedido
+                    </a>
+                </div>
+            {% endif %}
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Plante Uma Flor - Gerenciador de Comandas</p>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
+
