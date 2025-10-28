@@ -82,9 +82,9 @@ def criar_pdf(caminho_arquivo, dados, pedido_num=None):
     try:
         fonte_regular = "Helvetica"
         fonte_bold = "Helvetica-Bold"
-        if try_register_font("Verdana", "Verdana.ttf"):
+        if try_register_font("Verdana", "fonts/Verdana.ttf"):
             fonte_regular = "Verdana"
-            if try_register_font("Verdana-Bold", "verdanab.ttf") or try_register_font("Verdana-Bold", "Verdana Bold.ttf"):
+            if try_register_font("Verdana-Bold", "fonts/verdanab.ttf") or try_register_font("Verdana-Bold", "fonts/Verdana Bold.ttf"):
                 fonte_bold = "Verdana-Bold"
 
         cnv = canvas.Canvas(caminho_arquivo, pagesize=A4)
