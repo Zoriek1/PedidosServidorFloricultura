@@ -1,0 +1,27 @@
+{
+  "app": {
+    "name": "Plante Uma Flor v2.0",
+    "version": "2.0.0",
+    "author": "Plante Uma Flor Floricultura"
+  },
+  "server": {
+    "base_url": "http://192.168.1.148:5000",
+    "timeout": 5,
+    "retry_attempts": 3
+  },
+  "database": {
+    "path": "Documents/Pedidos-Floricultura/pedidos.db",
+    "backup_enabled": true,
+    "backup_interval_days": 7
+  },
+  "pdf": {
+    "output_dir": "Documents/Pedidos-Floricultura",
+    "font_fallback": "Helvetica",
+    "page_size": "A4"
+  },
+  "logging": {
+    "level": "INFO",
+    "max_file_size_mb": 10,
+    "backup_count": 5
+  }
+}

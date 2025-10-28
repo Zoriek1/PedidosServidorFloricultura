@@ -1,0 +1,408 @@
+{% extends "base.html" %}
+
+{% block title %}Painel de Gestão - Plante Uma Flor v2.0{% endblock %}
+
+{% block content %}
+<div class="painel-container">
+    <!-- Header do Painel -->
+    <div class="painel-header">
+        <h2><i class="fas fa-tachometer-alt"></i> Painel de Gestão de Pedidos</h2>
+        <div class="painel-actions">
+            <button class="btn btn-secondary" onclick="limparPedidosAntigos()">
+                <i class="fas fa-broom"></i> Limpar Antigos
+            </button>
+            <button class="btn btn-primary" onclick="atualizarPainel()">
+                <i class="fas fa-sync-alt"></i> Atualizar
+            </button>
+        </div>
+    </div>
+
+    <!-- Estatísticas -->
+    <div class="stats-grid">
+        <div class="stat-card stat-total">
+            <div class="stat-icon">
+                <i class="fas fa-list"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.total or 0 }}</h3>
+                <p>Total de Pedidos</p>
+            </div>
+        </div>
+        
+        <div class="stat-card stat-agendado">
+            <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.agendado or 0 }}</h3>
+                <p>Agendados</p>
+            </div>
+        </div>
+        
+        <div class="stat-card stat-producao">
+            <div class="stat-icon">
+                <i class="fas fa-cogs"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.em_producao or 0 }}</h3>
+                <p>Em Produção</p>
+            </div>
+        </div>
+        
+        <div class="stat-card stat-entrega">
+            <div class="stat-icon">
+                <i class="fas fa-truck"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.pronto_entrega or 0 }}</h3>
+                <p>Pronto Entrega</p>
+            </div>
+        </div>
+        
+        <div class="stat-card stat-rota">
+            <div class="stat-icon">
+                <i class="fas fa-route"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.em_rota or 0 }}</h3>
+                <p>Em Rota</p>
+            </div>
+        </div>
+        
+        <div class="stat-card stat-concluido">
+            <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.concluido or 0 }}</h3>
+                <p>Concluídos</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertas de Pedidos Atrasados -->
+    {% if pedidos_atrasados %}
+    <div class="alert alert-warning">
+        <div class="alert-header">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Pedidos Atrasados ({{ pedidos_atrasados|length }})</h3>
+        </div>
+        <div class="alert-content">
+            <p>Os seguintes pedidos estão atrasados e precisam de atenção:</p>
+            <ul>
+                {% for pedido in pedidos_atrasados %}
+                <li>
+                    <strong>#{{ pedido.id }}</strong> - {{ pedido.destinatario }} 
+                    ({{ pedido.dia_entrega.strftime('%d/%m/%Y') }} às {{ pedido.horario }})
+                    <span class="status-badge status-{{ pedido.status }}">{{ pedido.status|title }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Filtros -->
+    <div class="filters">
+        <div class="filter-group">
+            <label for="status-filter">Filtrar por Status:</label>
+            <select id="status-filter" onchange="filtrarPorStatus()">
+                <option value="">Todos os Status</option>
+                <option value="agendado">Agendados</option>
+                <option value="em_producao">Em Produção</option>
+                <option value="pronto_entrega">Pronto Entrega</option>
+                <option value="em_rota">Em Rota</option>
+                <option value="pronto_retirada">Pronto Retirada</option>
+                <option value="concluido">Concluídos</option>
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label for="search-input">Buscar:</label>
+            <input type="text" id="search-input" placeholder="Cliente, destinatário, produto..." onkeyup="buscarPedidos()">
+        </div>
+    </div>
+
+    <!-- Lista de Pedidos -->
+    <div class="pedidos-container">
+        <div class="pedidos-header">
+            <h3><i class="fas fa-list"></i> Pedidos</h3>
+            <div class="pedidos-count">
+                <span id="pedidos-count">{{ pedidos|length }}</span> pedidos encontrados
+            </div>
+        </div>
+        
+        <div class="pedidos-list" id="pedidos-list">
+            {% for pedido in pedidos %}
+            <div class="pedido-card status-{{ pedido.status }}" data-status="{{ pedido.status }}" data-id="{{ pedido.id }}">
+                <div class="pedido-header">
+                    <div class="pedido-info">
+                        <h4>#{{ pedido.id }} - {{ pedido.destinatario }}</h4>
+                        <p class="pedido-cliente">{{ pedido.cliente }}</p>
+                    </div>
+                    <div class="pedido-status">
+                        <span class="status-badge status-{{ pedido.status }}">{{ pedido.status|title }}</span>
+                        {% if pedido.is_overdue() %}
+                        <span class="overdue-badge">ATRASADO</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="pedido-content">
+                    <div class="pedido-details">
+                        <p><strong>Produto:</strong> {{ pedido.produto }}</p>
+                        <p><strong>Data/Hora:</strong> {{ pedido.dia_entrega.strftime('%d/%m/%Y') }} às {{ pedido.horario }}</p>
+                        {% if pedido.telefone_cliente %}
+                        <p><strong>Telefone:</strong> {{ pedido.telefone_cliente }}</p>
+                        {% endif %}
+                        {% if pedido.endereco %}
+                        <p><strong>Endereço:</strong> {{ pedido.endereco[:100] }}{% if pedido.endereco|length > 100 %}...{% endif %}</p>
+                        {% endif %}
+                        {% if pedido.mensagem %}
+                        <p><strong>Mensagem:</strong> {{ pedido.mensagem[:100] }}{% if pedido.mensagem|length > 100 %}...{% endif %}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="pedido-actions">
+                    <div class="status-select">
+                        <select onchange="atualizarStatus({{ pedido.id }}, this.value)">
+                            <option value="agendado" {% if pedido.status == 'agendado' %}selected{% endif %}>Agendado</option>
+                            <option value="em_producao" {% if pedido.status == 'em_producao' %}selected{% endif %}>Em Produção</option>
+                            <option value="pronto_entrega" {% if pedido.status == 'pronto_entrega' %}selected{% endif %}>Pronto Entrega</option>
+                            <option value="em_rota" {% if pedido.status == 'em_rota' %}selected{% endif %}>Em Rota</option>
+                            <option value="pronto_retirada" {% if pedido.status == 'pronto_retirada' %}selected{% endif %}>Pronto Retirada</option>
+                            <option value="concluido" {% if pedido.status == 'concluido' %}selected{% endif %}>Concluído</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-danger btn-sm" onclick="deletarPedido({{ pedido.id }})">
+                        <i class="fas fa-trash"></i> Deletar
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+            
+            {% if not pedidos %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <h3>Nenhum pedido encontrado</h3>
+                <p>Os pedidos aparecerão aqui quando forem criados via aplicativo desktop.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmação -->
+<div id="confirmModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Confirmar Ação</h3>
+            <button class="modal-close" onclick="fecharModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p id="modal-message">Tem certeza que deseja realizar esta ação?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="fecharModal()">Cancelar</button>
+            <button class="btn btn-primary" id="modal-confirm">Confirmar</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Variáveis globais
+let pedidosData = {{ pedidos|tojson }};
+let currentFilter = '';
+
+// Função para atualizar status
+async function atualizarStatus(pedidoId, novoStatus) {
+    try {
+        const response = await fetch(`/pedido/${pedidoId}/atualizar-status`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `status=${novoStatus}`
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Atualizar interface
+            const pedidoCard = document.querySelector(`[data-id="${pedidoId}"]`);
+            if (pedidoCard) {
+                pedidoCard.className = `pedido-card status-${novoStatus}`;
+                pedidoCard.querySelector('.status-badge').textContent = novoStatus.charAt(0).toUpperCase() + novoStatus.slice(1);
+            }
+            
+            // Mostrar notificação
+            mostrarNotificacao('Status atualizado com sucesso!', 'success');
+        } else {
+            mostrarNotificacao('Erro ao atualizar status: ' + result.error, 'error');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        mostrarNotificacao('Erro de conexão', 'error');
+    }
+}
+
+// Função para deletar pedido
+function deletarPedido(pedidoId) {
+    mostrarModal(
+        'Tem certeza que deseja deletar este pedido?',
+        async () => {
+            try {
+                const response = await fetch(`/pedido/${pedidoId}/deletar`, {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Remover da interface
+                    const pedidoCard = document.querySelector(`[data-id="${pedidoId}"]`);
+                    if (pedidoCard) {
+                        pedidoCard.remove();
+                    }
+                    
+                    mostrarNotificacao('Pedido deletado com sucesso!', 'success');
+                    atualizarContador();
+                } else {
+                    mostrarNotificacao('Erro ao deletar pedido: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarNotificacao('Erro de conexão', 'error');
+            }
+        }
+    );
+}
+
+// Função para limpar pedidos antigos
+async function limparPedidosAntigos() {
+    mostrarModal(
+        'Tem certeza que deseja remover pedidos concluídos há mais de 24 horas?',
+        async () => {
+            try {
+                const response = await fetch('/limpar-antigos', {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    mostrarNotificacao(`${result.count} pedidos antigos removidos!`, 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    mostrarNotificacao('Erro ao limpar pedidos: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarNotificacao('Erro de conexão', 'error');
+            }
+        }
+    );
+}
+
+// Função para filtrar por status
+function filtrarPorStatus() {
+    const status = document.getElementById('status-filter').value;
+    currentFilter = status;
+    aplicarFiltros();
+}
+
+// Função para buscar pedidos
+function buscarPedidos() {
+    aplicarFiltros();
+}
+
+// Função para aplicar filtros
+function aplicarFiltros() {
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const statusFilter = document.getElementById('status-filter').value;
+    const pedidos = document.querySelectorAll('.pedido-card');
+    let visibleCount = 0;
+    
+    pedidos.forEach(pedido => {
+        const status = pedido.getAttribute('data-status');
+        const text = pedido.textContent.toLowerCase();
+        
+        const matchesSearch = !searchTerm || text.includes(searchTerm);
+        const matchesStatus = !statusFilter || status === statusFilter;
+        
+        if (matchesSearch && matchesStatus) {
+            pedido.style.display = 'block';
+            visibleCount++;
+        } else {
+            pedido.style.display = 'none';
+        }
+    });
+    
+    document.getElementById('pedidos-count').textContent = visibleCount;
+}
+
+// Função para atualizar painel
+function atualizarPainel() {
+    location.reload();
+}
+
+// Função para atualizar contador
+function atualizarContador() {
+    const visiblePedidos = document.querySelectorAll('.pedido-card[style*="block"], .pedido-card:not([style*="none"])');
+    document.getElementById('pedidos-count').textContent = visiblePedidos.length;
+}
+
+// Função para mostrar modal
+function mostrarModal(message, onConfirm) {
+    document.getElementById('modal-message').textContent = message;
+    document.getElementById('modal-confirm').onclick = () => {
+        onConfirm();
+        fecharModal();
+    };
+    document.getElementById('confirmModal').style.display = 'flex';
+}
+
+// Função para fechar modal
+function fecharModal() {
+    document.getElementById('confirmModal').style.display = 'none';
+}
+
+// Função para mostrar notificação
+function mostrarNotificacao(message, type) {
+    // Implementação simples de notificação
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// Auto-atualização a cada 30 segundos
+setInterval(() => {
+    // Verificar se há pedidos atrasados
+    const pedidosAtrasados = document.querySelectorAll('.overdue-badge');
+    if (pedidosAtrasados.length > 0) {
+        // Destacar pedidos atrasados
+        pedidosAtrasados.forEach(badge => {
+            badge.parentElement.parentElement.classList.add('overdue-highlight');
+        });
+    }
+}, 30000);
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Painel de gestão carregado');
+    
+    // Aplicar filtros iniciais
+    aplicarFiltros();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,21 @@
+# Plante Uma Flor v2.0 - Cliente Desktop
+# Dependências otimizadas para build
+
+# Core dependencies
+reportlab>=4.0.0
+requests>=2.31.0
+
+# GUI (já incluído no Python)
+# tkinter - built-in
+
+# Build tools
+pyinstaller>=5.13.0
+auto-py-to-exe>=2.40.0
+
+# Optional optimizations
+nuitka>=1.8.0
+
+# Development tools
+pytest>=7.4.0
+black>=23.0.0
+flake8>=6.0.0
