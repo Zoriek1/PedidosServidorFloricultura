@@ -1,5 +1,8 @@
 # 🌺 Plante Uma Flor v2.0 - Sistema Completo
 
+![Amostra de Uso](./Amostra de uso programa, Client - Side.jpg)
+
+
 ## 🎯 O Que É
 
 Sistema completo de gerenciamento de pedidos para floricultura com:
