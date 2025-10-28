@@ -1,6 +1,6 @@
 # 🌺 Plante Uma Flor v2.0 - Sistema Completo
 
-![Amostra de Uso](./Amostra de uso programa, Client - Side.jpg)
+![Amostra de Uso](./Amostra_de_uso.jpg)
 
 
 ## 🎯 O Que É
