@@ -8,29 +8,61 @@ import shutil
 import subprocess
 from pathlib import Path
 
+def check_dependencies():
+    """Verifica e instala dependências necessárias"""
+    print("🔍 Verificando dependências...")
+    
+    required_packages = ['pyinstaller', 'reportlab', 'requests']
+    missing_packages = []
+    
+    for package in required_packages:
+        try:
+            __import__(package)
+            print(f"  ✅ {package}")
+        except ImportError:
+            missing_packages.append(package)
+            print(f"  ❌ {package} - não encontrado")
+    
+    if missing_packages:
+        print(f"\n📦 Instalando dependências faltantes: {', '.join(missing_packages)}")
+        try:
+            subprocess.run([
+                sys.executable, "-m", "pip", "install", "--upgrade"
+            ] + missing_packages, check=True)
+            print("✅ Dependências instaladas com sucesso!")
+            return True
+        except subprocess.CalledProcessError as e:
+            print(f"❌ Erro ao instalar dependências: {e}")
+            print("💡 Tente executar manualmente: pip install pyinstaller reportlab requests")
+            return False
+    
+    return True
+
 def build_executable():
     """Constrói executável otimizado"""
+    
+    # Verificar dependências primeiro
+    if not check_dependencies():
+        return False
     
     # Caminhos
     project_root = Path(__file__).parent.parent.parent
     build_dir = project_root.parent / "dist"
     src_dir = project_root / "src"
     
-    print("🚀 Iniciando build do executável...")
+    print("\n🚀 Iniciando build do executável...")
     
     # Limpar diretório de build
     if build_dir.exists():
         shutil.rmtree(build_dir)
     build_dir.mkdir(exist_ok=True)
     
-    # Configuração do PyInstaller
+    # Configuração do PyInstaller (simplificada)
     pyinstaller_cmd = [
-        "pyinstaller",
+        sys.executable, "-m", "PyInstaller",
         "--onefile",  # Arquivo único
         "--windowed",  # Sem console
         "--name=PlanteUmaFlor-Client",
-        "--icon=resources/icons/app.ico",  # Se existir
-        "--add-data=resources;resources",  # Incluir recursos
         "--hidden-import=reportlab",
         "--hidden-import=requests",
         "--hidden-import=sqlite3",
@@ -39,7 +71,6 @@ def build_executable():
         "--hidden-import=tkinter.messagebox",
         "--hidden-import=tkinter.filedialog",
         "--optimize=2",  # Otimização Python
-        "--strip",  # Remover símbolos de debug
         "--clean",  # Limpar cache
         f"--distpath={build_dir}",
         f"--workpath={build_dir / 'build'}",
@@ -50,7 +81,8 @@ def build_executable():
     try:
         # Executar PyInstaller
         print("📦 Executando PyInstaller...")
-        result = subprocess.run(pyinstaller_cmd, cwd=project_root, check=True)
+        result = subprocess.run(pyinstaller_cmd, cwd=project_root, check=True, 
+                              capture_output=True, text=True)
         
         # Verificar se executável foi criado
         exe_path = build_dir / "PlanteUmaFlor-Client.exe"
@@ -59,9 +91,10 @@ def build_executable():
             print(f"📁 Tamanho: {exe_path.stat().st_size / 1024 / 1024:.1f} MB")
             
             # Copiar recursos necessários
+            resources_src = src_dir / "resources"
             resources_dest = build_dir / "resources"
-            if (src_dir / "resources").exists():
-                shutil.copytree(src_dir / "resources", resources_dest)
+            if resources_src.exists():
+                shutil.copytree(resources_src, resources_dest)
                 print("📁 Recursos copiados")
             
             # Criar script de inicialização
@@ -73,10 +106,21 @@ def build_executable():
             
         else:
             print("❌ Erro: Executável não foi criado")
+            print("📋 Saída do PyInstaller:")
+            print(result.stdout)
+            if result.stderr:
+                print("❌ Erros:")
+                print(result.stderr)
             return False
             
     except subprocess.CalledProcessError as e:
         print(f"❌ Erro no build: {e}")
+        print("📋 Saída do PyInstaller:")
+        if hasattr(e, 'stdout') and e.stdout:
+            print(e.stdout)
+        if hasattr(e, 'stderr') and e.stderr:
+            print("❌ Erros:")
+            print(e.stderr)
         return False
     except Exception as e:
         print(f"❌ Erro inesperado: {e}")
