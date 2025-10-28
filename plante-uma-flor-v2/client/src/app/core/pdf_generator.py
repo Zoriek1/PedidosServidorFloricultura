@@ -5,6 +5,7 @@ Gerador de PDFs otimizado
 import os
 from pathlib import Path
 from datetime import datetime
+from typing import Dict
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm

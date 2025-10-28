@@ -2,9 +2,11 @@
 """
 Janela principal otimizada com carregamento lazy
 """
+import os
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 from pathlib import Path
+from datetime import datetime
 from typing import Dict, Any
 from app.core.database import DatabaseManager
 from app.core.api_client import APIClient

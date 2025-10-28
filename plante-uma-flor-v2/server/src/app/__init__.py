@@ -3,6 +3,8 @@
 Plante Uma Flor v2.0 - Servidor Web
 Factory de aplicação Flask
 """
+import os
+from pathlib import Path
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from app.config import Config
@@ -13,7 +15,14 @@ db = SQLAlchemy()
 
 def create_app():
     """Factory de aplicação Flask"""
-    app = Flask(__name__)
+    # Definir caminhos corretos para templates e static
+    base_dir = Path(__file__).parent.parent
+    template_dir = base_dir / 'templates'
+    static_dir = base_dir / 'static'
+    
+    app = Flask(__name__, 
+                template_folder=str(template_dir),
+                static_folder=str(static_dir))
     
     # Configurações
     app.config.from_object(Config)
