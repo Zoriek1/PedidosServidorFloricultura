@@ -9,6 +9,8 @@ backend/ssl/*.pem
 backend/ssl/*.key
 backend/ssl/*.crt
 backend/ssl/*.cer
+backend/*.pem
+backend/*.key
 
 # Logs
 *.log

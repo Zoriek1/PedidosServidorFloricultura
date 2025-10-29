@@ -10,11 +10,11 @@ Dim objShell, scriptDir, backendDir, pythonCmd, strCommand
 ' Criar objeto Shell
 Set objShell = CreateObject("WScript.Shell")
 
-' Obter diretório do script
+' Obter diretório do script (backend/UtilsScripts)
 scriptDir = CreateObject("Scripting.FileSystemObject").GetParentFolderName(WScript.ScriptFullName)
 
-' Mudar para diretório do backend
-backendDir = scriptDir
+' Obter diretório do backend (um nível acima)
+backendDir = CreateObject("Scripting.FileSystemObject").GetParentFolderName(scriptDir)
 objShell.CurrentDirectory = backendDir
 
 ' Verificar se certificados existem

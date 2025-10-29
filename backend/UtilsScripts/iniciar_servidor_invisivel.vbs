@@ -7,8 +7,11 @@
 Set WshShell = CreateObject("WScript.Shell")
 Set fso = CreateObject("Scripting.FileSystemObject")
 
-' Obter o diretório do script
+' Obter o diretório do script (backend/UtilsScripts)
 scriptPath = fso.GetParentFolderName(WScript.ScriptFullName)
+
+' Obter o diretório do backend (um nível acima)
+backendPath = fso.GetParentFolderName(scriptPath)
 
 ' Verificar se já está rodando
 Set objWMIService = GetObject("winmgmts:\\.\root\cimv2")
@@ -20,7 +23,7 @@ If colProcesses.Count > 0 Then
 End If
 
 ' Mudar para o diretório do backend
-WshShell.CurrentDirectory = scriptPath
+WshShell.CurrentDirectory = backendPath
 
 ' Iniciar o servidor TOTALMENTE invisível
 ' 0 = Janela oculta, False = Não aguardar término
