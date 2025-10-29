@@ -44,6 +44,10 @@ class ProductionConfig(Config):
     # Em produção, usar secret key da variável de ambiente
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'change-this-in-production-please'
     
+    # Configurações específicas para produção
+    HOST = '0.0.0.0'
+    PORT = int(os.environ.get('PORT', 5000))
+    
     @staticmethod
     def init_app(app):
         # Validar SECRET_KEY apenas quando a app for iniciada
@@ -57,4 +61,11 @@ config = {
     'production': ProductionConfig,
     'default': DevelopmentConfig
 }
+
+# Importar configuração de produção se disponível
+try:
+    from app.config_production import ProductionConfig as ProdConfig
+    config['production'] = ProdConfig
+except ImportError:
+    pass
 
