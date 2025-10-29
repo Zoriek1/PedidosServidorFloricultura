@@ -332,7 +332,7 @@ const PedidoCard = {
     <style>
         @page {
             size: A4;
-            margin: 2cm;
+            margin: 1.5cm;
         }
         
         * {
@@ -343,113 +343,121 @@ const PedidoCard = {
         
         body {
             font-family: Arial, sans-serif;
-            font-size: 12pt;
-            line-height: 1.6;
+            font-size: 10pt;
+            line-height: 1.4;
             color: #333;
         }
         
         .container {
             max-width: 100%;
             margin: 0 auto;
+            max-height: 27cm;
+            overflow: hidden;
         }
         
         .header {
             text-align: center;
-            border-bottom: 3px solid #9333ea;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
+            border-bottom: 2px solid #9333ea;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
         }
         
         .header h1 {
             color: #9333ea;
-            font-size: 28pt;
-            margin-bottom: 5px;
+            font-size: 20pt;
+            margin-bottom: 3px;
         }
         
         .header p {
             color: #666;
-            font-size: 11pt;
+            font-size: 9pt;
         }
         
         .pedido-numero {
             background: #9333ea;
             color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 6px 15px;
+            border-radius: 6px;
             display: inline-block;
             font-weight: bold;
-            font-size: 16pt;
-            margin: 20px 0;
+            font-size: 13pt;
+            margin: 10px 0 8px 0;
         }
         
         .section {
-            margin-bottom: 25px;
+            margin-bottom: 12px;
             page-break-inside: avoid;
         }
         
         .section-title {
             background: #f3f4f6;
-            padding: 8px 12px;
-            border-left: 4px solid #9333ea;
+            padding: 5px 10px;
+            border-left: 3px solid #9333ea;
             font-weight: bold;
-            font-size: 14pt;
-            margin-bottom: 10px;
+            font-size: 11pt;
+            margin-bottom: 6px;
         }
         
         .field {
-            margin-bottom: 12px;
-            padding-left: 10px;
+            margin-bottom: 6px;
+            padding-left: 8px;
+            line-height: 1.3;
         }
         
         .field-label {
             font-weight: bold;
             color: #555;
             display: inline-block;
-            min-width: 150px;
+            min-width: 130px;
+            font-size: 9.5pt;
         }
         
         .field-value {
             color: #333;
+            font-size: 9.5pt;
         }
         
         .field-value.highlight {
             color: #9333ea;
             font-weight: bold;
-            font-size: 14pt;
+            font-size: 11pt;
         }
         
         .message-box {
             background: #fef3c7;
-            border: 2px solid #f59e0b;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
+            border: 1.5px solid #f59e0b;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 8px 0;
             font-style: italic;
+            font-size: 9pt;
+            max-height: 80px;
+            overflow: hidden;
         }
         
         .delivery-box {
             background: #dbeafe;
-            border: 2px solid #3b82f6;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
+            border: 1.5px solid #3b82f6;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 8px 0;
         }
         
         .footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 2px solid #e5e7eb;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #e5e7eb;
             text-align: center;
             color: #666;
-            font-size: 10pt;
+            font-size: 8pt;
         }
         
         .status-badge {
             display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
+            padding: 4px 12px;
+            border-radius: 15px;
             font-weight: bold;
-            font-size: 11pt;
+            font-size: 9pt;
         }
         
         .status-agendado { background: #e5e7eb; color: #374151; }
@@ -458,6 +466,21 @@ const PedidoCard = {
         .status-em_rota { background: #dbeafe; color: #1e40af; }
         .status-concluido { background: #d1fae5; color: #166534; }
         
+        /* Otimizações para garantir 1 página */
+        .compact .field {
+            margin-bottom: 4px;
+        }
+        
+        .compact .section {
+            margin-bottom: 10px;
+        }
+        
+        .compact textarea-content {
+            max-height: 60px;
+            overflow: hidden;
+            font-size: 9pt;
+        }
+        
         @media print {
             body {
                 print-color-adjust: exact;
@@ -465,7 +488,15 @@ const PedidoCard = {
             }
             
             .no-print {
-                display: none;
+                display: none !important;
+            }
+            
+            .container {
+                page-break-after: avoid;
+            }
+            
+            .section {
+                page-break-inside: avoid;
             }
         }
     </style>

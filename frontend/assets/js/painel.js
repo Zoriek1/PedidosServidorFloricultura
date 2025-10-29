@@ -186,13 +186,16 @@ const PainelManager = {
             return;
         }
 
+        // Ordenar pedidos: mais próximos do dia atual primeiro
+        const pedidosOrdenados = this.sortPedidosByProximity([...this.pedidos]);
+
         // Criar cards
-        this.pedidos.forEach(pedido => {
+        pedidosOrdenados.forEach(pedido => {
             const card = PedidoCard.create(pedido);
             container.appendChild(card);
         });
 
-        console.log(`✅ ${this.pedidos.length} pedidos renderizados`);
+        console.log(`✅ ${pedidosOrdenados.length} pedidos renderizados (ordenados por proximidade)`);
     },
 
     /**
@@ -241,6 +244,9 @@ const PainelManager = {
                 (p.telefone_cliente && p.telefone_cliente.includes(search))
             );
         }
+
+        // Ordenar pedidos filtrados por proximidade
+        filtered = this.sortPedidosByProximity(filtered);
 
         // Renderizar filtrados
         const container = document.getElementById('pedidos-container');
@@ -356,6 +362,36 @@ const PainelManager = {
         } finally {
             Utils.hideLoading();
         }
+    },
+
+    /**
+     * Ordena pedidos por proximidade da data atual
+     * Pedidos mais próximos aparecem primeiro
+     */
+    sortPedidosByProximity(pedidos) {
+        const now = new Date();
+        
+        return pedidos.sort((a, b) => {
+            try {
+                // Criar objetos Date para cada pedido
+                const dateA = new Date(a.dia_entrega + 'T' + a.horario);
+                const dateB = new Date(b.dia_entrega + 'T' + b.horario);
+                
+                // Calcular diferença em relação ao momento atual
+                const diffA = Math.abs(dateA - now);
+                const diffB = Math.abs(dateB - now);
+                
+                // Priorizar pedidos não concluídos
+                if (a.status === 'concluido' && b.status !== 'concluido') return 1;
+                if (a.status !== 'concluido' && b.status === 'concluido') return -1;
+                
+                // Ordenar por proximidade (menor diferença primeiro)
+                return diffA - diffB;
+            } catch (error) {
+                console.error('Erro ao ordenar pedidos:', error);
+                return 0;
+            }
+        });
     },
 
     /**

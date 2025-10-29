@@ -68,6 +68,19 @@ const FormManager = {
             console.warn('⚠️ Botão Finalizar NÃO encontrado ao configurar listeners');
         }
 
+        // Listener para tipo de pedido (Entrega/Retirada)
+        document.querySelectorAll('input[name="tipo_pedido"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                this.toggleEnderecoFields(e.target.value);
+            });
+        });
+
+        // Verificar tipo inicial ao carregar
+        const tipoInicial = document.querySelector('input[name="tipo_pedido"]:checked');
+        if (tipoInicial) {
+            this.toggleEnderecoFields(tipoInicial.value);
+        }
+
         // Salvar rascunho automaticamente
         document.querySelectorAll('input, textarea, select').forEach(field => {
             field.addEventListener('change', () => this.saveDraft());
@@ -75,6 +88,73 @@ const FormManager = {
 
         // Auto-aplicar máscaras
         Masks.applyAll();
+    },
+
+    /**
+     * Mostra/oculta campos de endereço baseado no tipo de pedido
+     */
+    toggleEnderecoFields(tipoPedido) {
+        const enderecoContainer = document.getElementById('endereco')?.closest('div');
+        const obsEntregaContainer = document.getElementById('obs_entrega')?.closest('div');
+        const step3Title = document.querySelector('#step-3 h2');
+
+        if (tipoPedido === 'Retirada') {
+            // Esconder campos de endereço
+            if (enderecoContainer) {
+                enderecoContainer.style.display = 'none';
+                // Remover required do endereço
+                const enderecoField = document.getElementById('endereco');
+                if (enderecoField) {
+                    enderecoField.removeAttribute('required');
+                    enderecoField.value = ''; // Limpar valor
+                }
+            }
+            
+            // Mudar título do step 3
+            if (step3Title) {
+                step3Title.innerHTML = `
+                    <i class="fas fa-store text-primary"></i>
+                    Observações de Retirada
+                `;
+            }
+
+            // Manter observações visíveis e ajustar label
+            if (obsEntregaContainer) {
+                const label = obsEntregaContainer.querySelector('label');
+                if (label) {
+                    label.innerHTML = `
+                        Como Retirar / Observações de Retirada
+                    `;
+                }
+            }
+
+            console.log('🏪 Modo: Retirada - Campos de endereço ocultados');
+        } else {
+            // Mostrar campos de endereço
+            if (enderecoContainer) {
+                enderecoContainer.style.display = 'block';
+            }
+
+            // Restaurar título do step 3
+            if (step3Title) {
+                step3Title.innerHTML = `
+                    <i class="fas fa-map-marker-alt text-primary"></i>
+                    Logística de Entrega
+                `;
+            }
+
+            // Restaurar label de observações
+            if (obsEntregaContainer) {
+                const label = obsEntregaContainer.querySelector('label');
+                if (label) {
+                    label.innerHTML = `
+                        Como Entregar / Observações de Entrega
+                    `;
+                }
+            }
+
+            console.log('🚚 Modo: Entrega - Campos de endereço visíveis');
+        }
     },
 
     /**
@@ -102,6 +182,14 @@ const FormManager = {
         const stepNumber = document.getElementById('step-number');
         if (stepNumber) {
             stepNumber.textContent = step;
+        }
+
+        // Se está indo para o step 3, garantir que campos de endereço estejam corretos
+        if (step === 3) {
+            const tipoSelecionado = document.querySelector('input[name="tipo_pedido"]:checked');
+            if (tipoSelecionado) {
+                this.toggleEnderecoFields(tipoSelecionado.value);
+            }
         }
 
         // Scroll para o topo
