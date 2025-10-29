@@ -1,6 +1,6 @@
 # Plante Uma Flor - Sistema de Gestão de Pedidos PWA
 
-![Version](https://img.shields.io/badge/version-3.1-blue)
+![Version](https://img.shields.io/badge/version-3.2-blue)
 ![Python](https://img.shields.io/badge/python-3.8+-green)
 ![Flask](https://img.shields.io/badge/flask-2.3+-red)
 ![PWA](https://img.shields.io/badge/PWA-enabled-purple)
@@ -208,7 +208,23 @@ POST   /api/cleanup             # Limpar pedidos antigos
 
 ## 📝 Changelog
 
-### v3.1 (Atual)
+### v3.2 (Atual)
+
+**Melhorias:**
+- ✅ Ordenação inteligente de pedidos por proximidade da data
+- ✅ Pedidos mais próximos aparecem primeiro no painel
+- ✅ Template de impressão otimizado para 1 página única
+- ✅ Campos de endereço condicionais (ocultos em "Retirada")
+- ✅ Scripts backend organizados em pastas (run/ e UtilsScripts/)
+- ✅ UX significativamente melhorada
+
+**Organização:**
+- 📁 Criada pasta `backend/run/` com scripts principais
+- 📁 Criada pasta `backend/UtilsScripts/` com scripts avançados
+- 📄 Documentação inline em cada pasta de scripts
+- 🧹 Removido código legado v1.0/v2.0
+
+### v3.1
 
 **Melhorias:**
 - ✅ Impressão profissional de pedidos em A4
@@ -235,34 +251,37 @@ POST   /api/cleanup             # Limpar pedidos antigos
 
 ## 🔧 Scripts Úteis
 
-### Iniciar Servidor
+### Iniciar Servidor (Uso Diário)
 
 ```bash
-# HTTP
-python main.py
+# Opção mais fácil - Inicia servidor + abre navegador
+backend/run/abrir_sistema.bat           # HTTP
+backend/run/abrir_sistema_https.bat     # HTTPS
 
-# HTTPS
-python main.py --https
-
-# Background (Windows)
-iniciar_servidor_invisivel.vbs
-iniciar_servidor_https_invisivel.vbs
+# Ou via Python diretamente
+cd backend
+python main.py                           # HTTP
+python main.py --https                   # HTTPS
 ```
 
-### Parar Servidor
+### Scripts Avançados
 
 ```bash
-parar_servidor.bat
-parar_servidor_admin.bat           # Com permissões admin
-parar_tudo_incluindo_vbs.bat       # Para tudo
+# Inicialização
+backend/UtilsScripts/iniciar_servidor.bat
+backend/UtilsScripts/iniciar_servidor_invisivel.vbs
+
+# Parada
+backend/UtilsScripts/parar_servidor.bat
+backend/UtilsScripts/parar_servidor_admin.bat
+backend/UtilsScripts/parar_tudo_incluindo_vbs.bat
+
+# Verificações
+backend/UtilsScripts/verificar_porta.bat
+backend/UtilsScripts/verificar_processos_vbs.bat
 ```
 
-### Verificações
-
-```bash
-verificar_porta.bat                # Verifica porta 5000
-verificar_processos_vbs.bat        # Verifica processos
-```
+**💡 Dica:** Para uso diário, use os scripts em `backend/run/`
 
 ---
 
