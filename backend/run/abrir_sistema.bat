@@ -4,11 +4,11 @@ REM Plante Uma Flor - PWA v3.0
 REM Inicia o servidor e abre o navegador automaticamente
 REM ====================================================
 
-cd /d "%~dp0"
+cd /d "%~dp0\.."
 
 echo.
 echo ====================================================
-echo  Plante Uma Flor - PWA v3.0
+echo  Plante Uma Flor - PWA v3.2
 echo  Inicializando sistema...
 echo ====================================================
 echo.
@@ -35,7 +35,7 @@ echo ====================================================
 echo  Sistema aberto no navegador!
 echo ====================================================
 echo.
-echo Para parar o servidor, execute: parar_servidor.bat
+echo Para parar o servidor, execute: UtilsScripts\parar_servidor.bat
 echo.
 timeout /t 3
 

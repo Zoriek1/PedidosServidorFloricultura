@@ -6,7 +6,7 @@
 
 title Plante Uma Flor - Inicializando...
 
-cd /d "%~dp0"
+cd /d "%~dp0\.."
 
 echo.
 echo ============================================
@@ -16,19 +16,21 @@ echo.
 
 :: Verificar certificados
 if not exist "ssl\cert.pem" (
-    echo [ERRO] Certificados nao encontrados!
-    echo.
-    echo Execute primeiro:
-    echo   1. ssl\INSTALAR_MKCERT.bat
-    echo   2. ssl\GERAR_CERTIFICADOS.bat
-    echo.
-    pause
-    exit /b 1
+    if not exist "ssl\localhost+2.pem" (
+        echo [ERRO] Certificados nao encontrados!
+        echo.
+        echo Execute primeiro:
+        echo   1. ssl\INSTALAR_MKCERT_SIMPLES.bat
+        echo   2. ssl\GERAR_CERTIFICADOS_AUTO.bat
+        echo.
+        pause
+        exit /b 1
+    )
 )
 
 :: Iniciar servidor invisível
 echo [1/2] Iniciando servidor HTTPS em background...
-start /min "" wscript.exe "iniciar_servidor_https_invisivel.vbs"
+start /min "" wscript.exe "UtilsScripts\iniciar_servidor_https_invisivel.vbs"
 
 :: Aguardar servidor iniciar
 echo [2/2] Aguardando servidor inicializar...
@@ -60,7 +62,7 @@ echo Acesse de outros dispositivos:
 echo   https://%IP%:5000
 echo.
 echo Para parar o servidor:
-echo   Execute: parar_servidor.bat
+echo   Execute: UtilsScripts\parar_servidor.bat
 echo.
 echo ============================================
 echo.
