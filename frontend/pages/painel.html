@@ -1,0 +1,148 @@
+<!-- Página: Painel de Gestão -->
+<div>
+    <!-- Cabeçalho -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                    <i class="fas fa-th-large text-primary"></i>
+                    Painel de Gestão
+                </h1>
+                <p class="text-gray-600">Gerencie todos os pedidos em um só lugar</p>
+            </div>
+
+            <div class="flex gap-2">
+                <button id="btn-refresh" class="btn btn-secondary" title="Atualizar">
+                    <i class="fas fa-sync-alt"></i>
+                    <span class="hidden md:inline">Atualizar</span>
+                </button>
+                <button id="btn-cleanup" class="btn btn-secondary" title="Limpar Antigos">
+                    <i class="fas fa-broom"></i>
+                    <span class="hidden md:inline">Limpar Antigos</span>
+                </button>
+                <button onclick="Router.navigate('/criar-pedido')" class="btn btn-primary">
+                    <i class="fas fa-plus-circle"></i>
+                    <span class="hidden md:inline">Novo Pedido</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estatísticas -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <!-- Total -->
+        <div class="bg-white rounded-lg shadow-md p-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 mb-1">Total</p>
+                    <p id="stat-total" class="text-3xl font-bold text-gray-800" data-count="0">0</p>
+                </div>
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-list text-2xl text-blue-600"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agendados -->
+        <div class="bg-white rounded-lg shadow-md p-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 mb-1">Agendados</p>
+                    <p id="stat-agendado" class="text-3xl font-bold text-gray-800" data-count="0">0</p>
+                </div>
+                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-clock text-2xl text-gray-600"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Em Produção -->
+        <div class="bg-white rounded-lg shadow-md p-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 mb-1">Produção</p>
+                    <p id="stat-producao" class="text-3xl font-bold text-gray-800" data-count="0">0</p>
+                </div>
+                <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-cogs text-2xl text-yellow-600"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prontos -->
+        <div class="bg-white rounded-lg shadow-md p-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 mb-1">Prontos</p>
+                    <p id="stat-pronto" class="text-3xl font-bold text-gray-800" data-count="0">0</p>
+                </div>
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-check-circle text-2xl text-green-600"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros e Busca -->
+    <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+        <div class="flex flex-col md:flex-row gap-4">
+            <!-- Busca -->
+            <div class="flex-1">
+                <div class="relative">
+                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input 
+                        type="text" 
+                        id="search-input"
+                        class="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
+                        placeholder="Buscar por cliente, destinatário ou produto..."
+                    >
+                </div>
+            </div>
+
+            <!-- Filtros de Status -->
+            <div class="flex flex-wrap gap-2">
+                <button 
+                    data-filter-status="todos"
+                    class="px-4 py-2 rounded-lg transition active bg-primary text-white"
+                >
+                    Todos
+                </button>
+                <button 
+                    data-filter-status="agendado"
+                    class="px-4 py-2 rounded-lg transition bg-gray-200 text-gray-700 hover:bg-gray-300"
+                >
+                    Agendado
+                </button>
+                <button 
+                    data-filter-status="em_producao"
+                    class="px-4 py-2 rounded-lg transition bg-gray-200 text-gray-700 hover:bg-gray-300"
+                >
+                    Em Produção
+                </button>
+                <button 
+                    data-filter-status="pronto_entrega"
+                    class="px-4 py-2 rounded-lg transition bg-gray-200 text-gray-700 hover:bg-gray-300"
+                >
+                    Pronto
+                </button>
+                <button 
+                    data-filter-status="concluido"
+                    class="px-4 py-2 rounded-lg transition bg-gray-200 text-gray-700 hover:bg-gray-300"
+                >
+                    Concluído
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Pedidos -->
+    <div id="pedidos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Pedidos serão carregados aqui via JavaScript -->
+        
+        <!-- Loading Skeleton -->
+        <div class="skeleton bg-white rounded-lg p-6 h-64"></div>
+        <div class="skeleton bg-white rounded-lg p-6 h-64"></div>
+        <div class="skeleton bg-white rounded-lg p-6 h-64"></div>
+    </div>
+</div>
+

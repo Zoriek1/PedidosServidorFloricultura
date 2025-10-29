@@ -1,0 +1,12 @@
+# Certificados SSL gerados (não commitar no Git)
+*.pem
+*.key
+*.crt
+*.cer
+
+# Manter apenas os scripts
+!.gitignore
+!*.bat
+!*.md
+
+

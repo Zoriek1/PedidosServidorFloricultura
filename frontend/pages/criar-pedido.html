@@ -1,0 +1,339 @@
+<!-- Página: Criar Pedido - Formulário Multi-Step -->
+<div class="max-w-3xl mx-auto">
+    <!-- Cabeçalho -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">
+            <i class="fas fa-plus-circle text-primary"></i>
+            Novo Pedido
+        </h1>
+        <p class="text-gray-600">Preencha as informações abaixo para criar um novo pedido</p>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div class="flex justify-between mb-4 text-sm">
+            <span class="font-medium text-gray-700">
+                Etapa <span id="step-number">1</span> de 4
+            </span>
+        </div>
+        
+        <div class="w-full bg-gray-200 rounded-full h-3">
+            <div id="progress-bar" class="bg-primary h-3 rounded-full transition-all duration-300" style="width: 25%"></div>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="flex justify-between mt-4">
+            <div id="progress-1" class="progress-step active flex-1 text-center">
+                <div class="progress-circle">1</div>
+                <p class="text-xs mt-2 font-medium">Cliente</p>
+            </div>
+            <div id="progress-2" class="progress-step flex-1 text-center">
+                <div class="progress-circle">2</div>
+                <p class="text-xs mt-2">Produto</p>
+            </div>
+            <div id="progress-3" class="progress-step flex-1 text-center">
+                <div class="progress-circle">3</div>
+                <p class="text-xs mt-2">Entrega</p>
+            </div>
+            <div id="progress-4" class="progress-step flex-1 text-center">
+                <div class="progress-circle">4</div>
+                <p class="text-xs mt-2">Finalizar</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulário -->
+    <form id="pedido-form" class="bg-white rounded-lg shadow-md p-6">
+        
+        <!-- Step 1: Dados do Cliente -->
+        <div id="step-1" class="form-step active space-y-4">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-user text-primary"></i>
+                Dados do Cliente
+            </h2>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Quem Enviou (Cliente)
+                </label>
+                <input 
+                    type="text" 
+                    id="cliente"
+                    name="cliente"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
+                    placeholder="Nome do remetente"
+                >
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Telefone do Cliente <span class="text-red-500">*</span>
+                </label>
+                <input 
+                    type="tel" 
+                    id="telefone_cliente"
+                    name="telefone_cliente"
+                    required
+                    data-mask="phone"
+                    data-validation="phone"
+                    data-field-name="Telefone"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
+                    placeholder="(62) 99999-9999"
+                >
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Para (Destinatário) <span class="text-red-500">*</span>
+                </label>
+                <input 
+                    type="text" 
+                    id="destinatario"
+                    name="destinatario"
+                    required
+                    data-validation="required"
+                    data-field-name="Destinatário"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
+                    placeholder="Nome do destinatário"
+                >
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Tipo de Pedido <span class="text-red-500">*</span>
+                </label>
+                <div class="flex gap-4">
+                    <label class="flex-1 cursor-pointer">
+                        <input type="radio" name="tipo_pedido" value="Entrega" checked class="hidden peer">
+                        <div class="px-6 py-4 border-2 border-gray-300 rounded-lg text-center peer-checked:border-primary peer-checked:bg-primary peer-checked:bg-opacity-10 peer-checked:font-semibold transition">
+                            <i class="fas fa-truck text-2xl mb-2"></i>
+                            <p>Entrega</p>
+                        </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                        <input type="radio" name="tipo_pedido" value="Retirada" class="hidden peer">
+                        <div class="px-6 py-4 border-2 border-gray-300 rounded-lg text-center peer-checked:border-primary peer-checked:bg-primary peer-checked:bg-opacity-10 peer-checked:font-semibold transition">
+                            <i class="fas fa-store text-2xl mb-2"></i>
+                            <p>Retirada</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Produto e Agendamento -->
+        <div id="step-2" class="form-step space-y-4">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-flower text-primary"></i>
+                Produto e Agendamento
+            </h2>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Nome do Produto <span class="text-red-500">*</span>
+                </label>
+                <textarea 
+                    id="produto"
+                    name="produto"
+                    required
+                    data-validation="required"
+                    data-field-name="Produto"
+                    rows="3"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
+                    placeholder="Ex.: Buquê 12 rosas vermelhas"
+                ></textarea>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Flores que Vão e Cor
+                </label>
+                <textarea 
+                    id="flores_cor"
+                    name="flores_cor"
+                    rows="3"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
+                    placeholder="Ex.: 12 rosas vermelhas, gipsófilas brancas"
+                ></textarea>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Valor Total (R$)
+                </label>
+                <input 
+                    type="text" 
+                    id="valor"
+                    name="valor"
+                    data-mask="currency"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
+                    placeholder="R$ 120,00"
+                >
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Data de Entrega <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="dia_entrega"
+                        name="dia_entrega"
+                        required
+                        data-mask="date"
+                        data-validation="date"
+                        data-field-name="Data"
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
+                        placeholder="DD/MM/AAAA"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Horário <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="horario"
+                        name="horario"
+                        required
+                        data-mask="time"
+                        data-validation="time"
+                        data-field-name="Horário"
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
+                        placeholder="14:30"
+                    >
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Logística -->
+        <div id="step-3" class="form-step space-y-4">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-map-marker-alt text-primary"></i>
+                Logística de Entrega
+            </h2>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Endereço Completo
+                </label>
+                <textarea 
+                    id="endereco"
+                    name="endereco"
+                    rows="4"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
+                    placeholder="Rua, número, complemento, bairro, cidade"
+                ></textarea>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Como Entregar / Observações de Entrega
+                </label>
+                <textarea 
+                    id="obs_entrega"
+                    name="obs_entrega"
+                    rows="4"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
+                    placeholder="Instruções especiais para entrega"
+                ></textarea>
+            </div>
+        </div>
+
+        <!-- Step 4: Finalização -->
+        <div id="step-4" class="form-step space-y-4">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-check-circle text-primary"></i>
+                Finalizar Pedido
+            </h2>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Carta / Mensagem
+                </label>
+                <textarea 
+                    id="mensagem"
+                    name="mensagem"
+                    rows="4"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
+                    placeholder="Mensagem para o cartão"
+                ></textarea>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Forma de Pagamento
+                </label>
+                <select 
+                    id="pagamento"
+                    name="pagamento"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
+                >
+                    <option value="">Selecione...</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                    <option value="Cartão de Crédito">Cartão de Crédito</option>
+                    <option value="Cartão de Débito">Cartão de Débito</option>
+                    <option value="PIX">PIX</option>
+                    <option value="Transferência">Transferência</option>
+                    <option value="Boleto">Boleto</option>
+                    <option value="A Combinar">A Combinar</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Observações Gerais
+                </label>
+                <textarea 
+                    id="observacoes"
+                    name="observacoes"
+                    rows="3"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
+                    placeholder="Outras informações relevantes"
+                ></textarea>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p class="text-sm text-blue-800">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    Revise todas as informações antes de finalizar o pedido.
+                </p>
+            </div>
+        </div>
+
+        <!-- Botões de Navegação -->
+        <div class="flex justify-between mt-8 pt-6 border-t">
+            <button 
+                type="button" 
+                id="btn-anterior"
+                class="btn btn-secondary hidden"
+            >
+                <i class="fas fa-arrow-left"></i>
+                Anterior
+            </button>
+
+            <div class="ml-auto flex gap-2">
+                <button 
+                    type="button" 
+                    id="btn-proximo"
+                    class="btn btn-primary"
+                >
+                    Próximo
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+
+                <button 
+                    type="button" 
+                    id="btn-finalizar"
+                    class="btn btn-success hidden"
+                >
+                    <i class="fas fa-check"></i>
+                    Finalizar Pedido
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
