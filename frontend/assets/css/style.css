@@ -5,9 +5,9 @@
 
 /* Variáveis CSS */
 :root {
-    --color-primary: #9333ea;
-    --color-secondary: #7c3aed;
-    --color-accent: #a855f7;
+    --color-primary: #56d467ff;
+    --color-secondary: #4e8059;
+    --color-accent: #279b03;
     --color-success: #10b981;
     --color-warning: #f59e0b;
     --color-error: #ef4444;
@@ -372,8 +372,10 @@ select:focus {
     background: white;
     border-radius: 0.75rem;
     padding: 1.5rem;
-    max-width: 90%;
-    width: 500px;
+    max-width: 95%;
+    width: 720px;
+    max-height: 90vh;
+    overflow: auto;
     box-shadow: var(--shadow-xl);
     animation: scaleIn 0.2s ease-out;
 }
@@ -416,8 +418,14 @@ select:focus {
     }
     
     .modal-content {
-        width: 95%;
+        width: 100%;
         padding: 1rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .modal-content {
+        width: 800px;
     }
 }
 
@@ -432,5 +440,18 @@ select:focus {
 
 .hidden {
     display: none !important;
+}
+
+/* Logo da marca no navbar */
+.brand-logo {
+    height: clamp(24px, 4vw, 44px);
+    width: auto;
+    object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+}
+
+.brand-title {
+    white-space: nowrap;
 }
 

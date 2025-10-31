@@ -1,11 +1,14 @@
 // Service Worker - Plante Uma Flor PWA v3.0
 // Gerencia cache e funcionalidade offline
 
-const CACHE_NAME = 'plante-uma-flor-v1';
+const CACHE_NAME = 'plante-uma-flor-v5';
 const CACHE_URLS = [
     '/',
     '/index.html',
     '/manifest.json',
+    '/assets/images/Buques.ico',
+    '/assets/js/icons/icon-192x192.png?v=buques',
+    '/assets/js/icons/icon-512x512.png?v=buques',
     '/assets/css/style.css',
     '/assets/js/app.js',
     '/assets/js/router.js',

@@ -112,6 +112,14 @@ const PedidoCard = {
                 </button>
 
                 <button 
+                    class="px-3 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition"
+                    onclick="PedidoCard.editPedido(${pedido.id})"
+                    title="Editar pedido"
+                >
+                    <i class="fas fa-edit"></i>
+                </button>
+
+                <button 
                     class="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
                     onclick="PainelManager.deletePedido(${pedido.id})"
                     title="Deletar pedido"
@@ -122,6 +130,176 @@ const PedidoCard = {
         `;
 
         return card;
+    },
+
+    /**
+     * Abre modal para editar pedido e salva via API
+     */
+    async editPedido(pedidoId) {
+        try {
+            Utils.showLoading();
+
+            // Carregar dados atuais do pedido
+            const result = await API.getPedido(pedidoId);
+            if (!result.success) {
+                throw new Error(result.error || 'Erro ao carregar pedido');
+            }
+
+            const p = result.data.pedido;
+
+            // Conteúdo do modal com formulário compacto
+            const modalHtml = `
+                <div class="max-h-[80vh] overflow-y-auto">
+                    <div class="flex justify-between items-start mb-4">
+                        <h2 class="text-2xl font-bold text-gray-800">
+                            Editar Pedido #${p.id}
+                        </h2>
+                        <button data-modal-close class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-2xl"></i>
+                        </button>
+                    </div>
+
+                    <form id="form-editar-pedido" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">De (Remetente)</label>
+                                <input id="edit-cliente" type="text" class="w-full border rounded px-3 py-2" value="${Utils.escapeHtml(p.cliente || '')}">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+                                <input id="edit-telefone" type="text" class="w-full border rounded px-3 py-2" value="${Utils.escapeHtml(p.telefone_cliente || '')}">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Para (Destinatário)</label>
+                                <input id="edit-destinatario" type="text" class="w-full border rounded px-3 py-2" value="${Utils.escapeHtml(p.destinatario || '')}">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
+                                <select id="edit-tipo" class="w-full border rounded px-3 py-2">
+                                    <option value="Entrega" ${p.tipo_pedido === 'Entrega' ? 'selected' : ''}>Entrega</option>
+                                    <option value="Retirada" ${p.tipo_pedido === 'Retirada' ? 'selected' : ''}>Retirada</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Produto</label>
+                            <textarea id="edit-produto" class="w-full border rounded px-3 py-2" rows="3">${Utils.escapeHtml(p.produto || '')}</textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Flores e Cor</label>
+                                <input id="edit-flores" type="text" class="w-full border rounded px-3 py-2" value="${Utils.escapeHtml(p.flores_cor || '')}">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Valor</label>
+                                <input id="edit-valor" type="text" class="w-full border rounded px-3 py-2" value="${Utils.escapeHtml(p.valor || '')}">
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Dia</label>
+                                    <input id="edit-dia" type="date" class="w-full border rounded px-3 py-2" value="${Utils.escapeHtml(p.dia_entrega || '')}">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Horário</label>
+                                    <input id="edit-horario" type="time" class="w-full border rounded px-3 py-2" value="${Utils.escapeHtml(p.horario || '')}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Endereço</label>
+                            <textarea id="edit-endereco" class="w-full border rounded px-3 py-2" rows="2">${Utils.escapeHtml(p.endereco || '')}</textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Como Entregar / Observações</label>
+                                <textarea id="edit-obs_entrega" class="w-full border rounded px-3 py-2" rows="2">${Utils.escapeHtml(p.obs_entrega || '')}</textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Carta/Mensagem</label>
+                                <textarea id="edit-mensagem" class="w-full border rounded px-3 py-2" rows="2">${Utils.escapeHtml(p.mensagem || '')}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Pagamento</label>
+                                <input id="edit-pagamento" type="text" class="w-full border rounded px-3 py-2" value="${Utils.escapeHtml(p.pagamento || '')}">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Observações Gerais</label>
+                                <textarea id="edit-observacoes" class="w-full border rounded px-3 py-2" rows="2">${Utils.escapeHtml(p.observacoes || '')}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end gap-3 pt-4 border-t">
+                            <button type="button" class="btn btn-secondary" data-modal-close>Cancelar</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save mr-2"></i>Salvar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+            const overlay = Modal.custom(modalHtml);
+
+            // Listener de submit
+            const form = overlay.querySelector('#form-editar-pedido');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                try {
+                    Utils.showLoading();
+
+                    // Coletar dados (enviar apenas os campos presentes)
+                    const data = {
+                        cliente: overlay.querySelector('#edit-cliente').value.trim(),
+                        telefone_cliente: overlay.querySelector('#edit-telefone').value.trim(),
+                        destinatario: overlay.querySelector('#edit-destinatario').value.trim(),
+                        tipo_pedido: overlay.querySelector('#edit-tipo').value,
+                        produto: overlay.querySelector('#edit-produto').value.trim(),
+                        flores_cor: overlay.querySelector('#edit-flores').value.trim(),
+                        valor: overlay.querySelector('#edit-valor').value.trim(),
+                        dia_entrega: overlay.querySelector('#edit-dia').value, // YYYY-MM-DD
+                        horario: overlay.querySelector('#edit-horario').value,
+                        endereco: overlay.querySelector('#edit-endereco').value.trim(),
+                        obs_entrega: overlay.querySelector('#edit-obs_entrega').value.trim(),
+                        mensagem: overlay.querySelector('#edit-mensagem').value.trim(),
+                        pagamento: overlay.querySelector('#edit-pagamento').value.trim(),
+                        observacoes: overlay.querySelector('#edit-observacoes').value.trim()
+                    };
+
+                    const update = await API.updatePedido(pedidoId, data);
+                    if (!update.success) {
+                        throw new Error(update.error || 'Erro ao atualizar pedido');
+                    }
+
+                    Notification.success('Pedido atualizado com sucesso!');
+                    Modal.close(overlay);
+
+                    // Recarregar lista e stats
+                    if (typeof PainelManager !== 'undefined') {
+                        await PainelManager.loadPedidos();
+                        await PainelManager.loadStats();
+                    }
+
+                } catch (err) {
+                    console.error('Erro ao salvar edição:', err);
+                    Notification.error(`Erro ao salvar: ${err.message}`);
+                } finally {
+                    Utils.hideLoading();
+                }
+            });
+
+        } catch (error) {
+            console.error('Erro ao abrir modal de edição:', error);
+            Notification.error('Erro ao abrir editor do pedido');
+        } finally {
+            Utils.hideLoading();
+        }
     },
 
     /**

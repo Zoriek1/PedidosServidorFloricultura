@@ -17,16 +17,16 @@ const PainelManager = {
      */
     async init() {
         console.log('📊 Inicializando painel');
-        
+
         // Configurar listeners
         this.setupListeners();
-        
-        // Carregar pedidos
-        await this.loadPedidos();
-        
-        // Carregar estatísticas
-        await this.loadStats();
-        
+
+        // Carregar pedidos e renderizar somente após dados prontos
+        await this.refreshPedidos();
+
+        // Carregar estatísticas (não precisa bloquear o init)
+        this.loadStats();
+
         // Configurar auto-refresh
         this.setupAutoRefresh();
     },
@@ -34,7 +34,7 @@ const PainelManager = {
     /**
      * Configura event listeners
      */
-    setupListeners() {
+   setupListeners() {
         // Busca
         const searchInput = document.getElementById('search-input');
         if (searchInput) {
@@ -55,7 +55,7 @@ const PainelManager = {
         // Botão atualizar
         const btnRefresh = document.getElementById('btn-refresh');
         if (btnRefresh) {
-            btnRefresh.addEventListener('click', () => this.loadPedidos(true));
+            btnRefresh.addEventListener('click', () => this.refreshPedidos(true));
         }
 
         // Botão limpar antigos
@@ -68,51 +68,44 @@ const PainelManager = {
     /**
      * Carrega pedidos da API
      */
-    async loadPedidos(showNotification = false) {
+     async refreshPedidos(showNotification = false) {
         try {
-            if (showNotification) {
-                Utils.showLoading();
-            }
+            if (showNotification) Utils.showLoading();
 
-            let result;
+            this.pedidos = await this.fetchPedidos();
 
-            // Se está online, buscar da API
-            if (Utils.isOnline()) {
-                result = await API.getPedidos(this.filtros);
-
-                if (result.success) {
-                    this.pedidos = result.data.pedidos;
-                    
-                    // Cachear pedidos no IndexedDB
-                    await DB.cachePedidos(this.pedidos);
-                }
-            } else {
-                // Se está offline, buscar do cache
-                console.log('⚠️ Offline - carregando do cache');
-                this.pedidos = await DB.getCachedPedidos();
-                Notification.warning('Mostrando dados em cache (offline)');
-            }
-
-            // Renderizar pedidos
             this.renderPedidos();
 
-            if (showNotification && result && result.success) {
-                Notification.success('Pedidos atualizados!');
+            if (showNotification) Notification.success('Pedidos atualizados!');
+        } catch (error) {
+            console.error('Erro ao atualizar pedidos:', error);
+            Notification.error('Erro ao atualizar pedidos');
+        } finally {
+            if (showNotification) Utils.hideLoading();
+        }
+    },
+
+    // 📦 Busca pedidos (API → cache → fallback)
+    async fetchPedidos() {
+        try {
+            if (Utils.isOnline()) {
+                const result = await API.getPedidos(this.filtros);
+
+                if (result.success) {
+                    await DB.cachePedidos(result.data.pedidos);
+                    return result.data.pedidos;
+                }
+
+                console.warn('⚠️ Falha na API, carregando do cache...');
             }
 
+            // fallback offline
+            const cached = await DB.getCachedPedidos();
+            Notification.warning('Mostrando dados em cache (offline)');
+            return cached;
         } catch (error) {
-            console.error('Erro ao carregar pedidos:', error);
-            Notification.error('Erro ao carregar pedidos');
-            
-            // Tentar carregar do cache
-            try {
-                this.pedidos = await DB.getCachedPedidos();
-                this.renderPedidos();
-            } catch (cacheError) {
-                console.error('Erro ao carregar cache:', cacheError);
-            }
-        } finally {
-            Utils.hideLoading();
+            console.error('Erro ao buscar pedidos:', error);
+            return await DB.getCachedPedidos();
         }
     },
 

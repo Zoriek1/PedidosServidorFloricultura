@@ -93,5 +93,30 @@ def create_app(config=None):
             except:
                 abort(404)
     
+    # ============================================
+    # SEGURANÇA: Autenticação e Rate Limiting
+    # ============================================
+    # Para ativar segurança, defina ENABLE_AUTH=true via variável de ambiente
+    # ou edite o middleware.py para configurar usuários
+    ENABLE_AUTH = os.environ.get('ENABLE_AUTH', 'false').lower() == 'true'
+    ENABLE_RATE_LIMIT = os.environ.get('ENABLE_RATE_LIMIT', 'false').lower() == 'true'
+    
+    if ENABLE_AUTH or ENABLE_RATE_LIMIT:
+        try:
+            from app.middleware import setup_security_middleware
+            setup_security_middleware(
+                app,
+                enable_auth=ENABLE_AUTH,
+                enable_rate_limit=ENABLE_RATE_LIMIT
+            )
+            if ENABLE_AUTH:
+                print("[SEGURANÇA] Autenticação HTTP Basic ATIVADA")
+            if ENABLE_RATE_LIMIT:
+                print("[SEGURANÇA] Rate Limiting ATIVADO")
+        except ImportError:
+            print("[AVISO] Middleware de segurança não encontrado. Pule esta mensagem se não pretende usar.")
+        except Exception as e:
+            print(f"[AVISO] Erro ao configurar segurança: {e}")
+    
     return app
 
