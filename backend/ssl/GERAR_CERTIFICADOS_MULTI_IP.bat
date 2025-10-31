@@ -1,23 +1,22 @@
 @echo off
 setlocal enabledelayedexpansion
 :: ===================================================
-:: PLANTE UMA FLOR - Gerador de Certificados (Auto)
-:: Detecta automaticamente mkcert (local ou sistema)
-:: VERSÃO MULTI-IP - Detecta TODOS os IPs
+:: PLANTE UMA FLOR - Gerador de Certificados SSL
+:: VERSÃO MULTI-IP - Detecta TODOS os IPs da máquina
 :: ===================================================
 
-title Gerar Certificados SSL
+title Gerar Certificados SSL (Multi-IP)
 
 echo.
 echo ============================================
-echo    GERADOR DE CERTIFICADOS SSL
+echo    GERADOR DE CERTIFICADOS SSL MULTI-IP
 echo    Plante Uma Flor - HTTPS Local
 echo ============================================
 echo.
 
 cd /d "%~dp0"
 
-:: Verificar se mkcert está no PATH (sistema)
+:: Verificar se mkcert está disponível (sistema ou local)
 where mkcert >nul 2>&1
 if %errorlevel% equ 0 (
     echo [OK] mkcert encontrado no sistema!
@@ -25,21 +24,15 @@ if %errorlevel% equ 0 (
     goto :mkcert_found
 )
 
-:: Verificar se mkcert existe na pasta local
 if exist "mkcert.exe" (
     echo [OK] mkcert.exe encontrado na pasta local!
     set MKCERT_CMD=.\mkcert.exe
     goto :mkcert_found
 )
 
-:: Se não encontrou em nenhum lugar
 echo [ERRO] mkcert nao encontrado!
 echo.
-echo O mkcert deve estar:
-echo   1. No PATH do sistema (execute: where mkcert)
-echo   2. Ou nesta pasta como mkcert.exe
-echo.
-echo Execute: INSTALAR_MKCERT_SIMPLES.bat
+echo Execute primeiro: INSTALAR_MKCERT_SIMPLES.bat
 echo.
 pause
 exit /b 1
@@ -61,7 +54,7 @@ if exist "..\config_servidor.ini" (
 echo [INFO] Hostname configurado: %HOSTNAME%
 echo.
 
-:: Descobrir TODOS os IPs da máquina
+:: Descobrir TODOS os IPs IPv4 da máquina
 echo [1/4] Detectando TODOS os IPs da maquina...
 echo.
 
@@ -130,7 +123,7 @@ echo.
 echo [3/4] Gerando certificados SSL multi-IP + hostname...
 echo.
 
-:: Gerar certificados com hostname + TODOS os IPs
+:: Gerar certificados com hostname + todos os IPs
 %MKCERT_CMD% -cert-file cert.pem -key-file key.pem %HOSTNAME% %IP_LIST%
 
 if %errorlevel% neq 0 (

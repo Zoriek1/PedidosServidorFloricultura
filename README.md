@@ -17,7 +17,8 @@ Progressive Web App moderno para gerenciamento de pedidos de floricultura. Inter
 - **Instalável** - Pode ser instalado como aplicativo nativo
 - **Responsivo** - Interface adaptável para todos os tamanhos de tela
 - **Rápido** - Carregamento instantâneo com cache inteligente
-- **HTTPS** - Suporte a certificados locais para instalação em rede
+- **HTTPS Multi-IP** - 🆕 Certificados SSL para todas as interfaces de rede
+- **100% Portável** - 🆕 Funciona em qualquer pasta, sem configuração
 - **Impressão** - Impressão profissional de pedidos em A4
 
 ---
@@ -56,6 +57,8 @@ Para instruções detalhadas, veja [`INICIO_RAPIDO.md`](INICIO_RAPIDO.md).
 - **[Início Rápido](INICIO_RAPIDO.md)** - Setup e primeiros passos
 - **[Instalação PWA](docs/INSTALACAO.md)** - Como instalar em cada dispositivo
 - **[Configuração HTTPS](docs/HTTPS.md)** - Setup de certificados SSL
+- **[Instalação Certificado Clientes](docs/INSTALACAO_CERTIFICADO_CLIENTES.md)** - 🆕 Como instalar certificado em Android/iOS/Windows
+- **[Portabilidade](docs/PORTABILIDADE.md)** - Sistema 100% portável e replicável
 - **[Início Automático](docs/INICIO_AUTOMATICO.md)** - Configurar inicialização do servidor
 - **[Desenvolvimento](docs/DESENVOLVIMENTO.md)** - Guia para desenvolvedores
 
@@ -135,24 +138,64 @@ Para HTTPS em rede local, veja [`docs/HTTPS.md`](docs/HTTPS.md).
 
 ## 🔒 HTTPS para Rede Local
 
-Para instalar o PWA em outros dispositivos da rede:
+### 🆕 Configuração com Hostname mDNS
+
+O servidor pode ser acessado via **hostname fixo** (ex: `Gestor-pedidos.local`) ao invés de IP!
+
+**Vantagens:**
+- ✅ Acesso consistente mesmo se o IP mudar
+- ✅ Mais fácil de lembrar que um número de IP
+- ✅ Funciona automaticamente na rede local
+- ✅ Certificados válidos para hostname + todos os IPs
+
+### Setup Rápido (Recomendado)
+
+```bash
+# Execute o configurador interativo
+cd backend
+CONFIGURAR_SERVIDOR.bat
+```
+
+Este script irá:
+1. Instalar mkcert (se necessário)
+2. Configurar o hostname (padrão: `Gestor-pedidos.local`)
+3. Gerar certificados SSL com hostname + multi-IP
+4. Preparar certificado CA para distribuição aos clientes
+
+### Setup Manual
 
 ```bash
 # 1. Instalar mkcert
 cd backend/ssl
 INSTALAR_MKCERT_SIMPLES.bat
 
-# 2. Gerar certificados
+# 2. (Opcional) Editar hostname em: backend/config_servidor.ini
+#    Padrão: Gestor-pedidos.local
+
+# 3. Gerar certificados com hostname + multi-IP
 GERAR_CERTIFICADOS_AUTO.bat
 
-# 3. Iniciar servidor HTTPS
-cd ..
-python main.py --https
+# 4. Distribuir certificado CA para clientes
+DISTRIBUIR_CERTIFICADO.bat
 
-# 4. Acessar
-# https://localhost:5000
-# https://IP:5000
+# 5. Iniciar servidor HTTPS
+cd ..\run
+abrir_sistema_https.bat
 ```
+
+### Acessar o Servidor
+
+**No servidor:**
+- `https://localhost:5000`
+- `https://Gestor-pedidos.local:5000`
+
+**Em outros dispositivos (clientes):**
+
+1. Instale o certificado CA (`rootCA.pem`) no dispositivo
+2. Acesse: `https://Gestor-pedidos.local:5000`
+3. Instale o PWA normalmente!
+
+📖 **Guia completo de instalação do certificado:** [`docs/INSTALACAO_CERTIFICADO_CLIENTES.md`](docs/INSTALACAO_CERTIFICADO_CLIENTES.md)
 
 Veja documentação completa: [`docs/HTTPS.md`](docs/HTTPS.md)
 

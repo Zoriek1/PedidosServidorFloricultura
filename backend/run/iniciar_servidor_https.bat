@@ -6,14 +6,14 @@
 
 title Plante Uma Flor - Servidor HTTPS
 
-:: Mudar para o diretório do backend
-cd /d "%~dp0"
-
 echo.
 echo ============================================
 echo    PLANTE UMA FLOR - SERVIDOR HTTPS
 echo ============================================
 echo.
+
+:: Mudar para o diretório do backend (pasta pai)
+cd /d "%~dp0\.."
 
 :: Verificar se os certificados existem
 if not exist "ssl\cert.pem" (
@@ -53,13 +53,16 @@ echo.
 echo ============================================
 echo   O servidor vai abrir na porta 5000
 echo   Acesse: https://localhost:5000
+echo   ou: https://Gestor-pedidos.local:5000
 echo.
 echo   Para parar: Pressione Ctrl+C
 echo ============================================
 echo.
+echo [INFO] Modo estavel (sem auto-reload)
+echo.
 
-:: Iniciar servidor em modo HTTPS
-python main.py --https
+:: Iniciar servidor em modo HTTPS com --no-reload (mais estável)
+python main.py --https --no-reload
 
 :: Se o servidor parou
 echo.

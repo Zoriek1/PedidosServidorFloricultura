@@ -35,7 +35,9 @@ class Config:
 
 class DevelopmentConfig(Config):
     """Configurações de desenvolvimento"""
-    DEBUG = True
+    # DEBUG desativado por padrão para estabilidade com múltiplos clientes
+    # Use --no-reload para garantir modo estável
+    DEBUG = False
 
 class ProductionConfig(Config):
     """Configurações de produção"""

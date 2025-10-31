@@ -1,5 +1,30 @@
 # 🚀 Início Rápido - Plante Uma Flor PWA
 
+## 🎯 Escolha seu Modo de Instalação
+
+### Opção A: Setup Completo com HTTPS (Recomendado)
+
+**Para uso em rede local com múltiplos dispositivos**
+
+```batch
+cd backend
+CONFIGURAR_SERVIDOR.bat
+```
+
+Este configurador interativo vai:
+- ✅ Instalar mkcert automaticamente
+- ✅ Configurar hostname (ex: `Gestor-pedidos.local`)
+- ✅ Gerar certificados SSL
+- ✅ Preparar distribuição para clientes
+
+**Acesso:** `https://Gestor-pedidos.local:5000`
+
+📖 **Depois, siga:** [`GUIA_HOSTNAME_MDNS.md`](GUIA_HOSTNAME_MDNS.md)
+
+### Opção B: Setup Simples (Apenas desenvolvimento local)
+
+**Para testar rapidamente no mesmo computador**
+
 ## Passos para Começar (5 minutos)
 
 ### 1. Instalar Dependências
@@ -24,9 +49,10 @@ http://localhost:5000
 
 **De outro dispositivo (mesma rede WiFi):**
 ```
-http://192.168.1.148:5000
+http://[IP_DO_SERVIDOR]:5000
 ```
-*(Substitua pelo IP do seu computador)*
+
+⚠️ **Observação:** No modo HTTP, o PWA só pode ser instalado no próprio servidor (localhost). Para instalar em outros dispositivos, use a **Opção A** (HTTPS com hostname).
 
 ---
 

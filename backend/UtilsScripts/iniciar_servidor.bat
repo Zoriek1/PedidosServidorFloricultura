@@ -22,6 +22,16 @@ if "%ERRORLEVEL%"=="0" (
     exit /b
 )
 
+REM Descobrir IP local dinamicamente
+for /f "tokens=2 delims=:" %%a in ('ipconfig ^| findstr /c:"IPv4"') do (
+    set IP=%%a
+    goto :found_ip
+)
+
+:found_ip
+REM Remover espaços
+set IP=%IP: =%
+
 REM Iniciar o servidor em uma nova janela minimizada
 start "Plante Uma Flor - Servidor PWA" /MIN python main.py
 
@@ -33,7 +43,7 @@ echo Para parar o servidor, feche a janela minimizada ou execute: parar_servidor
 echo.
 echo Acesse o sistema em:
 echo   Local:   http://localhost:5000
-echo   Rede:    http://192.168.1.148:5000
+echo   Rede:    http://%IP%:5000
 echo.
 timeout /t 5
 

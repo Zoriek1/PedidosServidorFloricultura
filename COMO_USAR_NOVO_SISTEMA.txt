@@ -1,0 +1,163 @@
+═══════════════════════════════════════════════════════════════════
+  SISTEMA DE HOSTNAME mDNS - COMO USAR
+  Plante Uma Flor - PWA v3.2
+═══════════════════════════════════════════════════════════════════
+
+PROBLEMA QUE FOI RESOLVIDO:
+───────────────────────────────────────────────────────────────────
+Antes: Quando o IP do servidor mudava, os certificados SSL ficavam
+       inválidos e você precisava regenerar e redistribuir tudo.
+
+Agora:  Servidor usa hostname fixo (Gestor-pedidos.local) que 
+        funciona independente do IP!
+
+═══════════════════════════════════════════════════════════════════
+  SETUP DO SERVIDOR (FAÇA 1 VEZ)
+═══════════════════════════════════════════════════════════════════
+
+1. Abra o terminal na pasta do projeto:
+   
+   cd backend
+   CONFIGURAR_SERVIDOR.bat
+
+2. Siga o assistente interativo:
+   - Instala mkcert (se necessário)
+   - Configura hostname (padrão: Gestor-pedidos.local)
+   - Gera certificados SSL
+   - Prepara arquivos para distribuição
+
+3. Pronto! Servidor configurado.
+
+═══════════════════════════════════════════════════════════════════
+  DISTRIBUIR PARA CLIENTES (FAÇA 1 VEZ POR DISPOSITIVO)
+═══════════════════════════════════════════════════════════════════
+
+1. Compartilhe a pasta: backend\ssl\PARA_CLIENTES\
+
+2. Cada cliente deve instalar o arquivo: rootCA.pem
+
+   ANDROID:
+   - Configurações → Segurança → Instalar certificado
+   - Escolha "Certificado CA"
+   - Selecione rootCA.pem
+   
+   iOS (IMPORTANTE!):
+   - Envie rootCA.pem por email/AirDrop
+   - Ajustes → Geral → Perfil → Instalar
+   - Ajustes → Geral → Sobre → Confiança do Certificado
+   - ATIVE o certificado mkcert (deve ficar verde)
+   
+   WINDOWS (outros PCs):
+   - Duplo clique em rootCA.pem
+   - Instalar → Máquina Local
+   - Autoridades de Certificação Raiz Confiáveis
+   - Concluir
+
+3. Documentação completa:
+   docs\INSTALACAO_CERTIFICADO_CLIENTES.md
+
+═══════════════════════════════════════════════════════════════════
+  ACESSAR O SISTEMA
+═══════════════════════════════════════════════════════════════════
+
+NO SERVIDOR:
+  https://localhost:5000
+  https://Gestor-pedidos.local:5000
+
+NOS CLIENTES (após instalar certificado):
+  https://Gestor-pedidos.local:5000
+
+IMPORTANTE: Use sempre o HOSTNAME, não o IP!
+            Assim funciona mesmo se o IP mudar.
+
+═══════════════════════════════════════════════════════════════════
+  VANTAGENS DO NOVO SISTEMA
+═══════════════════════════════════════════════════════════════════
+
+✓ IP pode mudar livremente (DHCP, roteador, etc)
+✓ Clientes continuam funcionando automaticamente
+✓ Não precisa regenerar certificados
+✓ Não precisa redistribuir nada
+✓ Hostname é mais fácil de lembrar que IP
+✓ Setup automático e guiado
+
+═══════════════════════════════════════════════════════════════════
+  ARQUIVOS IMPORTANTES
+═══════════════════════════════════════════════════════════════════
+
+CONFIGURAÇÃO:
+  backend\config_servidor.ini        - Edite aqui para mudar hostname
+
+SCRIPTS:
+  backend\CONFIGURAR_SERVIDOR.bat    - Setup inicial completo
+  backend\ssl\DISTRIBUIR_CERTIFICADO.bat - Prepara arquivos p/ clientes
+
+DOCUMENTAÇÃO:
+  GUIA_HOSTNAME_MDNS.md              - Guia rápido
+  docs\INSTALACAO_CERTIFICADO_CLIENTES.md - Guia detalhado p/ cada SO
+  INICIO_RAPIDO.md                   - Início rápido atualizado
+  README.md                          - Documentação completa
+
+═══════════════════════════════════════════════════════════════════
+  MUDOU DE IDEIA SOBRE O HOSTNAME?
+═══════════════════════════════════════════════════════════════════
+
+1. Edite: backend\config_servidor.ini
+   [SERVIDOR]
+   hostname = Seu-Novo-Nome.local
+
+2. Regenere certificados:
+   cd backend\ssl
+   GERAR_CERTIFICADOS_AUTO.bat
+
+3. Redistribua o novo rootCA.pem para os clientes
+
+═══════════════════════════════════════════════════════════════════
+  SOLUÇÃO DE PROBLEMAS
+═══════════════════════════════════════════════════════════════════
+
+"Hostname não resolve / Não encontrado"
+→ Use o IP temporariamente: https://192.168.X.XXX:5000
+→ mDNS pode não funcionar em algumas redes corporativas
+
+"Certificado não confiável"
+→ Android: Certifique-se que instalou como "Certificado CA"
+→ iOS: CRUCIAL ativar confiança em Sobre → Confiança do Certificado
+→ Windows: Deve estar em "Autoridades Raiz Confiáveis"
+
+"Não consigo acessar"
+→ Certifique-se que servidor está rodando
+→ Verifique se está na mesma rede
+→ Teste primeiro via IP para isolar o problema
+
+═══════════════════════════════════════════════════════════════════
+  DÚVIDAS?
+═══════════════════════════════════════════════════════════════════
+
+Leia a documentação completa:
+  - GUIA_HOSTNAME_MDNS.md (guia rápido)
+  - docs\INSTALACAO_CERTIFICADO_CLIENTES.md (detalhes por SO)
+  - docs\HTTPS.md (configuração HTTPS completa)
+
+═══════════════════════════════════════════════════════════════════
+  FLUXO RESUMIDO
+═══════════════════════════════════════════════════════════════════
+
+SERVIDOR (1x):
+  backend\CONFIGURAR_SERVIDOR.bat
+
+CADA CLIENTE (1x por dispositivo):
+  1. Receber rootCA.pem
+  2. Instalar no dispositivo
+  3. Acessar: https://Gestor-pedidos.local:5000
+
+IP MUDOU?
+  → NADA! Continue usando o mesmo hostname. Funciona automaticamente.
+
+═══════════════════════════════════════════════════════════════════
+
+Pronto! Agora você tem um sistema profissional com acesso via
+hostname que funciona independente do IP do servidor.
+
+Aproveite! 🌺
+

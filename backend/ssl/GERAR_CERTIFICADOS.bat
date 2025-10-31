@@ -1,7 +1,9 @@
 @echo off
+setlocal enabledelayedexpansion
 :: ===================================================
 :: PLANTE UMA FLOR - Gerador de Certificados SSL
 :: Gera certificados HTTPS para rede local
+:: VERSÃO MULTI-IP - Detecta TODOS os IPs
 :: ===================================================
 
 title Gerar Certificados SSL
@@ -29,25 +31,56 @@ echo.
 mkcert -version
 echo.
 
-:: Descobrir o IP local
-echo [1/4] Descobrindo IP da maquina...
-echo.
-
-for /f "tokens=2 delims=:" %%a in ('ipconfig ^| findstr /c:"IPv4"') do (
-    set IP=%%a
-    goto :found_ip
+:: Ler hostname do arquivo de configuração
+set "HOSTNAME=Gestor-pedidos.local"
+if exist "..\config_servidor.ini" (
+    for /f "tokens=2 delims==" %%a in ('findstr "hostname" ..\config_servidor.ini') do (
+        set "HOSTNAME=%%a"
+        set "HOSTNAME=!HOSTNAME: =!"
+    )
 )
 
-:found_ip
-:: Remover espaços
-set IP=%IP: =%
-
-echo IP encontrado: %IP%
+echo [INFO] Hostname configurado: %HOSTNAME%
 echo.
 
-:: Confirmar IP
-echo Este e o IP correto da sua maquina?
-echo Se nao, pressione Ctrl+C para cancelar e edite este arquivo.
+:: Descobrir TODOS os IPs da máquina
+echo [1/4] Detectando TODOS os IPs da maquina...
+echo.
+
+set "IP_LIST=localhost 127.0.0.1 ::1"
+set "IP_COUNT=0"
+
+for /f "tokens=2 delims=:" %%a in ('ipconfig ^| findstr /c:"IPv4"') do (
+    set "CURRENT_IP=%%a"
+    set "CURRENT_IP=!CURRENT_IP: =!"
+    
+    REM Verificar se não é loopback
+    echo !CURRENT_IP! | findstr /b /c:"127." >nul
+    if errorlevel 1 (
+        set /a IP_COUNT+=1
+        set "IP_LIST=!IP_LIST! !CURRENT_IP!"
+        echo   - IP !IP_COUNT!: !CURRENT_IP!
+    )
+)
+
+if %IP_COUNT% equ 0 (
+    echo.
+    echo [AVISO] Nenhum IP de rede encontrado!
+    echo Usando apenas localhost...
+    set "IP_LIST=localhost 127.0.0.1 ::1"
+) else (
+    echo.
+    echo [OK] Encontrados %IP_COUNT% enderecos de rede!
+)
+
+echo.
+echo Certificado sera gerado para:
+echo   Hostname: %HOSTNAME%
+echo   IPs: %IP_LIST%
+echo.
+echo Este certificado funcionara:
+echo   - Via hostname: https://%HOSTNAME%:5000
+echo   - Via IP em TODAS as interfaces de rede
 echo.
 pause
 
@@ -74,11 +107,11 @@ echo.
 echo [OK] CA raiz instalado!
 echo.
 
-echo [3/4] Gerando certificados SSL...
+echo [3/4] Gerando certificados SSL multi-IP + hostname...
 echo.
 
-:: Gerar certificados
-mkcert -cert-file cert.pem -key-file key.pem localhost 127.0.0.1 %IP% ::1
+:: Gerar certificados com hostname + TODOS os IPs
+mkcert -cert-file cert.pem -key-file key.pem %HOSTNAME% %IP_LIST%
 
 if %errorlevel% neq 0 (
     echo.
@@ -116,15 +149,35 @@ echo Arquivos criados:
 echo   - cert.pem (certificado publico)
 echo   - key.pem (chave privada)
 echo.
-echo IP configurado: %IP%
+echo Configuracao:
+echo   - Hostname: %HOSTNAME%
+echo   - IPs configurados: %IP_COUNT% enderecos de rede
 echo.
-echo Proximos passos:
-echo   1. Execute: ..\iniciar_servidor_https.bat
-echo   2. Acesse: https://%IP%:5000
-echo   3. Instale o PWA normalmente!
+echo Acesse o servidor via:
+echo   - https://%HOSTNAME%:5000 (RECOMENDADO)
+echo   - https://localhost:5000
+for /f "tokens=2 delims=:" %%a in ('ipconfig ^| findstr /c:"IPv4"') do (
+    set "DISPLAY_IP=%%a"
+    set "DISPLAY_IP=!DISPLAY_IP: =!"
+    echo !DISPLAY_IP! | findstr /b /c:"127." >nul
+    if errorlevel 1 (
+        echo   - https://!DISPLAY_IP!:5000
+    )
+)
 echo.
-echo Para outros dispositivos:
-echo   Consulte: INSTALAR_CERTIFICADO_OUTROS_DISPOSITIVOS.md
+echo ============================================
+echo   IMPORTANTE - CLIENTES
+echo ============================================
+echo.
+echo Para que outros dispositivos confiem no certificado:
+echo.
+echo 1. Execute: DISTRIBUIR_CERTIFICADO.bat
+echo    (Isso copia o certificado CA para uma pasta compartilhavel)
+echo.
+echo 2. Instale o certificado CA (rootCA.pem) em cada dispositivo
+echo    Veja: ..\docs\INSTALACAO_CERTIFICADO_CLIENTES.md
+echo.
+echo 3. Acesse via hostname: https://%HOSTNAME%:5000
 echo.
 echo ============================================
 echo.

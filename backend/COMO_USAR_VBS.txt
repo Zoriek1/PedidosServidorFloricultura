@@ -1,0 +1,132 @@
+═══════════════════════════════════════════════════════════════════
+  SERVIDOR HTTPS INVISÍVEL - GUIA RÁPIDO
+  Plante Uma Flor - PWA v3.2
+═══════════════════════════════════════════════════════════════════
+
+INICIAR SERVIDOR (SEM JANELA):
+───────────────────────────────────────────────────────────────────
+
+Duplo clique em:
+  UtilsScripts\iniciar_servidor_https_invisivel.vbs
+
+✓ Servidor inicia invisível (sem janela CMD)
+✓ Aparece notificação quando iniciar
+✓ Log salvo em: backend\servidor_https.log
+
+═══════════════════════════════════════════════════════════════════
+  PARAR SERVIDOR:
+═══════════════════════════════════════════════════════════════════
+
+Duplo clique em:
+  UtilsScripts\parar_servidor_https.bat
+
+✓ Para o servidor HTTPS
+✓ Fecha processos Python
+
+═══════════════════════════════════════════════════════════════════
+  VERIFICAR SE ESTÁ RODANDO:
+═══════════════════════════════════════════════════════════════════
+
+Duplo clique em:
+  UtilsScripts\verificar_servidor_https.bat
+
+✓ Mostra status (rodando ou não)
+✓ Exibe últimas linhas do log
+✓ Mostra PID do processo
+
+═══════════════════════════════════════════════════════════════════
+  O QUE MUDOU:
+═══════════════════════════════════════════════════════════════════
+
+ANTES:
+❌ VBS parava de funcionar (erro de encoding)
+❌ Sem log para debug
+❌ Difícil saber se estava rodando
+
+AGORA:
+✅ VBS configurado com UTF-8
+✅ Log automático em: servidor_https.log
+✅ Scripts para verificar status
+✅ Script para parar servidor
+
+═══════════════════════════════════════════════════════════════════
+  FLUXO DE USO DIÁRIO:
+═══════════════════════════════════════════════════════════════════
+
+1. LIGAR PC
+   
+2. Duplo clique em:
+   iniciar_servidor_https_invisivel.vbs
+   
+3. Esperar notificação (3-5 segundos)
+   
+4. Acessar:
+   https://192.168.1.148:5000
+
+5. Usar o sistema normalmente
+
+6. DESLIGAR: Executar parar_servidor_https.bat
+   (ou simplesmente desligar o PC)
+
+═══════════════════════════════════════════════════════════════════
+  INICIALIZAÇÃO AUTOMÁTICA:
+═══════════════════════════════════════════════════════════════════
+
+Para servidor iniciar automaticamente ao ligar o PC:
+
+1. Pressione: Win + R
+2. Digite: shell:startup
+3. Arraste o arquivo para essa pasta:
+   iniciar_servidor_https_invisivel.vbs
+
+Pronto! Ao ligar o PC, servidor inicia sozinho.
+
+═══════════════════════════════════════════════════════════════════
+  SOLUÇÃO DE PROBLEMAS:
+═══════════════════════════════════════════════════════════════════
+
+SERVIDOR NÃO INICIA?
+  1. Execute: verificar_servidor_https.bat
+  2. Veja o log: backend\servidor_https.log
+  3. Procure por mensagens de erro
+  
+CERTIFICADO INVÁLIDO?
+  1. Execute: ssl\GERAR_CERTIFICADOS_AUTO.bat
+  2. Reinicie o servidor
+
+PORTA 5000 OCUPADA?
+  1. Execute: parar_servidor_https.bat
+  2. Ou: netstat -ano | findstr :5000
+  3. Mate o processo manualmente
+
+QUERO VER O QUE ESTÁ ACONTECENDO?
+  Abra terminal e rode:
+  
+  cd backend
+  python main.py --https
+  
+  Isso mostra tudo na tela (modo debug)
+
+═══════════════════════════════════════════════════════════════════
+  ARQUIVOS IMPORTANTES:
+═══════════════════════════════════════════════════════════════════
+
+INICIAR:
+  ✓ UtilsScripts\iniciar_servidor_https_invisivel.vbs
+
+PARAR:
+  ✓ UtilsScripts\parar_servidor_https.bat
+
+VERIFICAR:
+  ✓ UtilsScripts\verificar_servidor_https.bat
+
+LOG:
+  ✓ backend\servidor_https.log (criado automaticamente)
+
+DOCUMENTAÇÃO:
+  ✓ UtilsScripts\README_HTTPS.md (detalhes completos)
+
+═══════════════════════════════════════════════════════════════════
+
+Tudo pronto para usar! 🌺
+
