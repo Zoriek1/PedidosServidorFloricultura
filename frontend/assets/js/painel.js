@@ -85,6 +85,11 @@ const PainelManager = {
         }
     },
 
+    // Compatibilidade: manter antiga assinatura
+    loadPedidos(showNotification = false) {
+        return this.refreshPedidos(showNotification);
+    },
+
     // 📦 Busca pedidos (API → cache → fallback)
     async fetchPedidos() {
         try {
@@ -412,12 +417,12 @@ const PainelManager = {
                 // Recarregar lista
                 await this.loadPedidos();
             } else {
-                throw new Error(result.error);
+                throw new Error(result.error || 'Falha ao limpar');
             }
 
         } catch (error) {
             console.error('Erro ao limpar pedidos:', error);
-            Notification.error('Erro ao limpar pedidos antigos');
+            Notification.error(`Erro ao limpar pedidos antigos: ${error.message || ''}`.trim());
         } finally {
             Utils.hideLoading();
         }

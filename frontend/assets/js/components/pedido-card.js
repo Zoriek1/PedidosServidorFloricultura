@@ -280,10 +280,14 @@ const PedidoCard = {
                     Notification.success('Pedido atualizado com sucesso!');
                     Modal.close(overlay);
 
-                    // Recarregar lista e stats
-                    if (typeof PainelManager !== 'undefined') {
-                        await PainelManager.loadPedidos();
-                        await PainelManager.loadStats();
+                    // Recarregar lista e stats (com fallback para reload da rota)
+                    if (typeof window !== 'undefined' && window.PainelManager && typeof window.PainelManager.loadPedidos === 'function') {
+                        await window.PainelManager.loadPedidos(true);
+                        if (typeof window.PainelManager.loadStats === 'function') {
+                            await window.PainelManager.loadStats();
+                        }
+                    } else if (typeof window !== 'undefined' && window.Router && typeof window.Router.reload === 'function') {
+                        window.Router.reload();
                     }
 
                 } catch (err) {
